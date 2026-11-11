@@ -29,7 +29,7 @@ export interface ImportResult {
 export class ImportError extends Error {}
 
 const VARIANT_COLUMNS = [
-  "name", "region", "is_default", "has_dgpu",
+  "sku", "name", "region", "is_default", "has_dgpu",
   "ram_gb", "ram_type", "ram_speed_mts", "ram_slots", "ram_soldered_gb", "ram_max_gb",
   "storage_gb", "storage_type", "storage_interface", "storage_slots", "storage_free_slots", "storage_upgradeable",
   "display_size_in", "display_resolution", "display_panel", "display_refresh_hz", "display_brightness_nits", "display_color_gamut", "display_touch",
@@ -139,9 +139,9 @@ export async function importCatalog(sql: Sql, file: CatalogFile, opts: { dryRun?
         // A single default variant per model: reset before applying the file's choice.
         if (m.variants.some((v) => v.is_default)) await tx`update variants set is_default = false where model_id = ${model.id}`;
 
-        const variantIdBySku = new Map<string, string>();
+        const variantIdByKey = new Map<string, string>();
         for (const v of m.variants) {
-          const vw = `${where} / variante ${v.sku}`;
+          const vw = `${where} / variante ${v.key}`;
           const row = {
             ...pick({ ...v, display_resolution: normRes(v.display_resolution) }, VARIANT_COLUMNS),
             cpu_id: resolve(cpuId, v.cpu, "cpu", vw),
@@ -151,10 +151,10 @@ export async function importCatalog(sql: Sql, file: CatalogFile, opts: { dryRun?
           };
           const cols = Object.keys(row);
           const [variant] = await tx<{ id: string }[]>`
-            insert into variants ${tx({ model_id: model.id, sku: v.sku, ...row })}
-            on conflict (model_id, sku) do update set ${tx(row, cols)}
+            insert into variants ${tx({ model_id: model.id, variant_key: v.key, ...row })}
+            on conflict (model_id, variant_key) do update set ${tx(row, cols)}
             returning id`;
-          variantIdBySku.set(v.sku, variant.id);
+          variantIdByKey.set(v.key, variant.id);
           stats.variants++;
 
           // Provenance is replaced as a whole for each imported variant.
@@ -176,7 +176,7 @@ export async function importCatalog(sql: Sql, file: CatalogFile, opts: { dryRun?
         for (const img of m.images) {
           const row = {
             model_id: model.id,
-            variant_id: img.variant_sku ? variantIdBySku.get(img.variant_sku)! : null,
+            variant_id: img.variant_key ? variantIdByKey.get(img.variant_key)! : null,
             url: img.url,
             alt: img.alt,
             angle: img.angle ?? null,

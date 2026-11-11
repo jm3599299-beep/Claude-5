@@ -1,0 +1,556 @@
+{
+  "$schema": "../schema/catalog.schema.json",
+  "sources": {
+    "apple-specs": {
+      "name": "Apple — MacBook Air Tech Specs",
+      "kind": "manufacturer",
+      "homepage_url": "https://www.apple.com/macbook-air/specs/",
+      "is_official": true,
+      "trust_level": 5
+    },
+    "apple-identify": {
+      "name": "Apple Support — Identify your MacBook Air model",
+      "kind": "manufacturer",
+      "homepage_url": "https://support.apple.com/en-us/102869",
+      "is_official": true,
+      "trust_level": 5,
+      "notes": "Fuente del nombre oficial, año de introducción (2026) e identificador de modelo. Los números de pieza se publican por color/región sin correspondencia con cada configuración, por eso no se asignan a variantes."
+    }
+  },
+  "cpus": [
+    {
+      "manufacturer": "Apple",
+      "model": "M5",
+      "cores": 10,
+      "performance_cores": 4,
+      "efficiency_cores": 6,
+      "source": "apple-specs"
+    }
+  ],
+  "gpus": [
+    {
+      "manufacturer": "Apple",
+      "model": "M5 (GPU de 8 núcleos)",
+      "is_integrated": true,
+      "source": "apple-specs"
+    },
+    {
+      "manufacturer": "Apple",
+      "model": "M5 (GPU de 10 núcleos)",
+      "is_integrated": true,
+      "source": "apple-specs"
+    }
+  ],
+  "models": [
+    {
+      "brand": "apple",
+      "family": "macbook-air",
+      "slug": "apple-macbook-air-13-m5",
+      "name": "MacBook Air (13-inch, M5)",
+      "generation": "M5",
+      "release_year": 2026,
+      "category": "ultrabook",
+      "use_cases": [
+        "estudiantes",
+        "programacion"
+      ],
+      "commercial_status": {
+        "value": "current",
+        "verified_at": "2026-11-11",
+        "source": "apple-specs"
+      },
+      "summary": "MacBook Air de 13 pulgadas con chip Apple M5 (CPU de 10 núcleos: 4 «super cores» y 6 de eficiencia), presentado en 2026. Identificador de modelo Mac17,3. Configuraciones estándar listadas por Apple; ampliables de fábrica hasta 32 GB de memoria unificada y 4 TB de SSD.",
+      "official_url": "https://www.apple.com/macbook-air/specs/",
+      "published": true,
+      "variants": [
+        {
+          "key": "m5-gpu8-16gb-512gb",
+          "name": "M5 · GPU 8 núcleos · 16 GB · 512 GB",
+          "is_default": true,
+          "cpu": {
+            "manufacturer": "Apple",
+            "model": "M5"
+          },
+          "igpu": {
+            "manufacturer": "Apple",
+            "model": "M5 (GPU de 8 núcleos)"
+          },
+          "ram_gb": 16,
+          "storage_gb": 512,
+          "display_size_in": 13.6,
+          "display_resolution": "2560×1664",
+          "battery_wh": 53.8,
+          "weight_kg": 1.23,
+          "dimensions_mm": "304.1 × 215 × 11.3",
+          "has_dgpu": false,
+          "ram_type": "Memoria unificada",
+          "ram_max_gb": 32,
+          "storage_type": "SSD",
+          "display_panel": "IPS con retroiluminación LED (Liquid Retina)",
+          "display_brightness_nits": 500,
+          "display_color_gamut": "P3 (amplia gama de color), True Tone",
+          "battery_life_claim": "Hasta 18 h de streaming de vídeo · hasta 15 h de navegación web inalámbrica (pruebas de Apple)",
+          "materials": "Carcasa de aluminio 100 % reciclado",
+          "keyboard": "Magic Keyboard retroiluminado con Touch ID; 78 (ANSI) o 79 (ISO) teclas",
+          "webcam": "12 MP Center Stage con Desk View, grabación 1080p",
+          "ports": [
+            "MagSafe 3",
+            "2× Thunderbolt 4 (USB-C)",
+            "Jack de auriculares 3,5 mm"
+          ],
+          "wifi": "Wi-Fi 7 (802.11be)",
+          "bluetooth": "6",
+          "os": "macOS",
+          "security_features": [
+            "Touch ID"
+          ],
+          "provenance": [
+            {
+              "source": "apple-specs",
+              "url": "https://www.apple.com/macbook-air/specs/",
+              "fields": [
+                "cpu",
+                "gpu",
+                "igpu",
+                "ram_gb",
+                "ram_type",
+                "ram_max_gb",
+                "storage_gb",
+                "storage_type",
+                "display_size_in",
+                "display_resolution",
+                "display_panel",
+                "display_brightness_nits",
+                "display_color_gamut",
+                "battery_wh",
+                "battery_life_claim",
+                "weight_kg",
+                "dimensions_mm",
+                "materials",
+                "keyboard",
+                "webcam",
+                "ports",
+                "wifi",
+                "bluetooth",
+                "os",
+                "security_features"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-11"
+            }
+          ]
+        },
+        {
+          "key": "m5-gpu10-16gb-1tb",
+          "name": "M5 · GPU 10 núcleos · 16 GB · 1 TB",
+          "is_default": false,
+          "cpu": {
+            "manufacturer": "Apple",
+            "model": "M5"
+          },
+          "igpu": {
+            "manufacturer": "Apple",
+            "model": "M5 (GPU de 10 núcleos)"
+          },
+          "ram_gb": 16,
+          "storage_gb": 1000,
+          "display_size_in": 13.6,
+          "display_resolution": "2560×1664",
+          "battery_wh": 53.8,
+          "weight_kg": 1.23,
+          "dimensions_mm": "304.1 × 215 × 11.3",
+          "has_dgpu": false,
+          "ram_type": "Memoria unificada",
+          "ram_max_gb": 32,
+          "storage_type": "SSD",
+          "display_panel": "IPS con retroiluminación LED (Liquid Retina)",
+          "display_brightness_nits": 500,
+          "display_color_gamut": "P3 (amplia gama de color), True Tone",
+          "battery_life_claim": "Hasta 18 h de streaming de vídeo · hasta 15 h de navegación web inalámbrica (pruebas de Apple)",
+          "materials": "Carcasa de aluminio 100 % reciclado",
+          "keyboard": "Magic Keyboard retroiluminado con Touch ID; 78 (ANSI) o 79 (ISO) teclas",
+          "webcam": "12 MP Center Stage con Desk View, grabación 1080p",
+          "ports": [
+            "MagSafe 3",
+            "2× Thunderbolt 4 (USB-C)",
+            "Jack de auriculares 3,5 mm"
+          ],
+          "wifi": "Wi-Fi 7 (802.11be)",
+          "bluetooth": "6",
+          "os": "macOS",
+          "security_features": [
+            "Touch ID"
+          ],
+          "provenance": [
+            {
+              "source": "apple-specs",
+              "url": "https://www.apple.com/macbook-air/specs/",
+              "fields": [
+                "cpu",
+                "gpu",
+                "igpu",
+                "ram_gb",
+                "ram_type",
+                "ram_max_gb",
+                "storage_gb",
+                "storage_type",
+                "display_size_in",
+                "display_resolution",
+                "display_panel",
+                "display_brightness_nits",
+                "display_color_gamut",
+                "battery_wh",
+                "battery_life_claim",
+                "weight_kg",
+                "dimensions_mm",
+                "materials",
+                "keyboard",
+                "webcam",
+                "ports",
+                "wifi",
+                "bluetooth",
+                "os",
+                "security_features"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-11"
+            }
+          ]
+        },
+        {
+          "key": "m5-gpu10-24gb-1tb",
+          "name": "M5 · GPU 10 núcleos · 24 GB · 1 TB",
+          "is_default": false,
+          "cpu": {
+            "manufacturer": "Apple",
+            "model": "M5"
+          },
+          "igpu": {
+            "manufacturer": "Apple",
+            "model": "M5 (GPU de 10 núcleos)"
+          },
+          "ram_gb": 24,
+          "storage_gb": 1000,
+          "display_size_in": 13.6,
+          "display_resolution": "2560×1664",
+          "battery_wh": 53.8,
+          "weight_kg": 1.23,
+          "dimensions_mm": "304.1 × 215 × 11.3",
+          "has_dgpu": false,
+          "ram_type": "Memoria unificada",
+          "ram_max_gb": 32,
+          "storage_type": "SSD",
+          "display_panel": "IPS con retroiluminación LED (Liquid Retina)",
+          "display_brightness_nits": 500,
+          "display_color_gamut": "P3 (amplia gama de color), True Tone",
+          "battery_life_claim": "Hasta 18 h de streaming de vídeo · hasta 15 h de navegación web inalámbrica (pruebas de Apple)",
+          "materials": "Carcasa de aluminio 100 % reciclado",
+          "keyboard": "Magic Keyboard retroiluminado con Touch ID; 78 (ANSI) o 79 (ISO) teclas",
+          "webcam": "12 MP Center Stage con Desk View, grabación 1080p",
+          "ports": [
+            "MagSafe 3",
+            "2× Thunderbolt 4 (USB-C)",
+            "Jack de auriculares 3,5 mm"
+          ],
+          "wifi": "Wi-Fi 7 (802.11be)",
+          "bluetooth": "6",
+          "os": "macOS",
+          "security_features": [
+            "Touch ID"
+          ],
+          "provenance": [
+            {
+              "source": "apple-specs",
+              "url": "https://www.apple.com/macbook-air/specs/",
+              "fields": [
+                "cpu",
+                "gpu",
+                "igpu",
+                "ram_gb",
+                "ram_type",
+                "ram_max_gb",
+                "storage_gb",
+                "storage_type",
+                "display_size_in",
+                "display_resolution",
+                "display_panel",
+                "display_brightness_nits",
+                "display_color_gamut",
+                "battery_wh",
+                "battery_life_claim",
+                "weight_kg",
+                "dimensions_mm",
+                "materials",
+                "keyboard",
+                "webcam",
+                "ports",
+                "wifi",
+                "bluetooth",
+                "os",
+                "security_features"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-11"
+            }
+          ]
+        }
+      ],
+      "images": []
+    },
+    {
+      "brand": "apple",
+      "family": "macbook-air",
+      "slug": "apple-macbook-air-15-m5",
+      "name": "MacBook Air (15-inch, M5)",
+      "generation": "M5",
+      "release_year": 2026,
+      "category": "ultrabook",
+      "use_cases": [
+        "estudiantes",
+        "programacion"
+      ],
+      "commercial_status": {
+        "value": "current",
+        "verified_at": "2026-11-11",
+        "source": "apple-specs"
+      },
+      "summary": "MacBook Air de 15 pulgadas con chip Apple M5 (CPU de 10 núcleos: 4 «super cores» y 6 de eficiencia), presentado en 2026. Identificador de modelo Mac17,4. Configuraciones estándar listadas por Apple; ampliables de fábrica hasta 32 GB de memoria unificada y 4 TB de SSD.",
+      "official_url": "https://www.apple.com/macbook-air/specs/",
+      "published": true,
+      "variants": [
+        {
+          "key": "m5-gpu10-16gb-512gb",
+          "name": "M5 · GPU 10 núcleos · 16 GB · 512 GB",
+          "is_default": true,
+          "cpu": {
+            "manufacturer": "Apple",
+            "model": "M5"
+          },
+          "igpu": {
+            "manufacturer": "Apple",
+            "model": "M5 (GPU de 10 núcleos)"
+          },
+          "ram_gb": 16,
+          "storage_gb": 512,
+          "display_size_in": 15.3,
+          "display_resolution": "2880×1864",
+          "battery_wh": 66.5,
+          "weight_kg": 1.51,
+          "dimensions_mm": "340.4 × 237.6 × 11.5",
+          "has_dgpu": false,
+          "ram_type": "Memoria unificada",
+          "ram_max_gb": 32,
+          "storage_type": "SSD",
+          "display_panel": "IPS con retroiluminación LED (Liquid Retina)",
+          "display_brightness_nits": 500,
+          "display_color_gamut": "P3 (amplia gama de color), True Tone",
+          "battery_life_claim": "Hasta 18 h de streaming de vídeo · hasta 15 h de navegación web inalámbrica (pruebas de Apple)",
+          "materials": "Carcasa de aluminio 100 % reciclado",
+          "keyboard": "Magic Keyboard retroiluminado con Touch ID; 78 (ANSI) o 79 (ISO) teclas",
+          "webcam": "12 MP Center Stage con Desk View, grabación 1080p",
+          "ports": [
+            "MagSafe 3",
+            "2× Thunderbolt 4 (USB-C)",
+            "Jack de auriculares 3,5 mm"
+          ],
+          "wifi": "Wi-Fi 7 (802.11be)",
+          "bluetooth": "6",
+          "os": "macOS",
+          "security_features": [
+            "Touch ID"
+          ],
+          "provenance": [
+            {
+              "source": "apple-specs",
+              "url": "https://www.apple.com/macbook-air/specs/",
+              "fields": [
+                "cpu",
+                "gpu",
+                "igpu",
+                "ram_gb",
+                "ram_type",
+                "ram_max_gb",
+                "storage_gb",
+                "storage_type",
+                "display_size_in",
+                "display_resolution",
+                "display_panel",
+                "display_brightness_nits",
+                "display_color_gamut",
+                "battery_wh",
+                "battery_life_claim",
+                "weight_kg",
+                "dimensions_mm",
+                "materials",
+                "keyboard",
+                "webcam",
+                "ports",
+                "wifi",
+                "bluetooth",
+                "os",
+                "security_features"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-11"
+            }
+          ]
+        },
+        {
+          "key": "m5-gpu10-16gb-1tb",
+          "name": "M5 · GPU 10 núcleos · 16 GB · 1 TB",
+          "is_default": false,
+          "cpu": {
+            "manufacturer": "Apple",
+            "model": "M5"
+          },
+          "igpu": {
+            "manufacturer": "Apple",
+            "model": "M5 (GPU de 10 núcleos)"
+          },
+          "ram_gb": 16,
+          "storage_gb": 1000,
+          "display_size_in": 15.3,
+          "display_resolution": "2880×1864",
+          "battery_wh": 66.5,
+          "weight_kg": 1.51,
+          "dimensions_mm": "340.4 × 237.6 × 11.5",
+          "has_dgpu": false,
+          "ram_type": "Memoria unificada",
+          "ram_max_gb": 32,
+          "storage_type": "SSD",
+          "display_panel": "IPS con retroiluminación LED (Liquid Retina)",
+          "display_brightness_nits": 500,
+          "display_color_gamut": "P3 (amplia gama de color), True Tone",
+          "battery_life_claim": "Hasta 18 h de streaming de vídeo · hasta 15 h de navegación web inalámbrica (pruebas de Apple)",
+          "materials": "Carcasa de aluminio 100 % reciclado",
+          "keyboard": "Magic Keyboard retroiluminado con Touch ID; 78 (ANSI) o 79 (ISO) teclas",
+          "webcam": "12 MP Center Stage con Desk View, grabación 1080p",
+          "ports": [
+            "MagSafe 3",
+            "2× Thunderbolt 4 (USB-C)",
+            "Jack de auriculares 3,5 mm"
+          ],
+          "wifi": "Wi-Fi 7 (802.11be)",
+          "bluetooth": "6",
+          "os": "macOS",
+          "security_features": [
+            "Touch ID"
+          ],
+          "provenance": [
+            {
+              "source": "apple-specs",
+              "url": "https://www.apple.com/macbook-air/specs/",
+              "fields": [
+                "cpu",
+                "gpu",
+                "igpu",
+                "ram_gb",
+                "ram_type",
+                "ram_max_gb",
+                "storage_gb",
+                "storage_type",
+                "display_size_in",
+                "display_resolution",
+                "display_panel",
+                "display_brightness_nits",
+                "display_color_gamut",
+                "battery_wh",
+                "battery_life_claim",
+                "weight_kg",
+                "dimensions_mm",
+                "materials",
+                "keyboard",
+                "webcam",
+                "ports",
+                "wifi",
+                "bluetooth",
+                "os",
+                "security_features"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-11"
+            }
+          ]
+        },
+        {
+          "key": "m5-gpu10-24gb-1tb",
+          "name": "M5 · GPU 10 núcleos · 24 GB · 1 TB",
+          "is_default": false,
+          "cpu": {
+            "manufacturer": "Apple",
+            "model": "M5"
+          },
+          "igpu": {
+            "manufacturer": "Apple",
+            "model": "M5 (GPU de 10 núcleos)"
+          },
+          "ram_gb": 24,
+          "storage_gb": 1000,
+          "display_size_in": 15.3,
+          "display_resolution": "2880×1864",
+          "battery_wh": 66.5,
+          "weight_kg": 1.51,
+          "dimensions_mm": "340.4 × 237.6 × 11.5",
+          "has_dgpu": false,
+          "ram_type": "Memoria unificada",
+          "ram_max_gb": 32,
+          "storage_type": "SSD",
+          "display_panel": "IPS con retroiluminación LED (Liquid Retina)",
+          "display_brightness_nits": 500,
+          "display_color_gamut": "P3 (amplia gama de color), True Tone",
+          "battery_life_claim": "Hasta 18 h de streaming de vídeo · hasta 15 h de navegación web inalámbrica (pruebas de Apple)",
+          "materials": "Carcasa de aluminio 100 % reciclado",
+          "keyboard": "Magic Keyboard retroiluminado con Touch ID; 78 (ANSI) o 79 (ISO) teclas",
+          "webcam": "12 MP Center Stage con Desk View, grabación 1080p",
+          "ports": [
+            "MagSafe 3",
+            "2× Thunderbolt 4 (USB-C)",
+            "Jack de auriculares 3,5 mm"
+          ],
+          "wifi": "Wi-Fi 7 (802.11be)",
+          "bluetooth": "6",
+          "os": "macOS",
+          "security_features": [
+            "Touch ID"
+          ],
+          "provenance": [
+            {
+              "source": "apple-specs",
+              "url": "https://www.apple.com/macbook-air/specs/",
+              "fields": [
+                "cpu",
+                "gpu",
+                "igpu",
+                "ram_gb",
+                "ram_type",
+                "ram_max_gb",
+                "storage_gb",
+                "storage_type",
+                "display_size_in",
+                "display_resolution",
+                "display_panel",
+                "display_brightness_nits",
+                "display_color_gamut",
+                "battery_wh",
+                "battery_life_claim",
+                "weight_kg",
+                "dimensions_mm",
+                "materials",
+                "keyboard",
+                "webcam",
+                "ports",
+                "wifi",
+                "bluetooth",
+                "os",
+                "security_features"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-11"
+            }
+          ]
+        }
+      ],
+      "images": []
+    }
+  ]
+}

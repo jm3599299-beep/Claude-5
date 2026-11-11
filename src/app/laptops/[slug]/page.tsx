@@ -299,14 +299,15 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
               const vImages = galleryImages(model, v.id);
               return {
                 id: v.id,
-                key: v.sku ?? v.id,
+                key: v.variant_key,
                 label: v.name,
-                sublabel: variantSublabel(v) || v.sku || undefined,
+                // Avoid repeating what a descriptive variant name already says.
+                sublabel: v.sku ?? (v.ram_gb && v.name.includes(`${v.ram_gb} GB`) ? undefined : variantSublabel(v) || undefined),
                 content: (
                   <div className="space-y-6">
                     {(v.sku || v.region) && (
                       <p className="text-sm text-fg-muted">
-                        {v.sku && <>SKU / número de producto: <span className="font-mono text-fg">{v.sku}</span></>}
+                        {v.sku && <>Número de pieza: <span className="font-mono text-fg">{v.sku}</span></>}
                         {v.region && <> · Región: {v.region}</>}
                       </p>
                     )}

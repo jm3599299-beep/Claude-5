@@ -686,10 +686,21 @@
             "items": {
               "type": "object",
               "properties": {
-                "sku": {
+                "key": {
                   "type": "string",
-                  "minLength": 1,
-                  "maxLength": 80
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "sku": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "name": {
                   "type": "string",
@@ -962,7 +973,7 @@
                     {
                       "type": "string",
                       "minLength": 1,
-                      "maxLength": 40
+                      "maxLength": 80
                     },
                     {
                       "type": "null"
@@ -1279,7 +1290,7 @@
                 }
               },
               "required": [
-                "sku",
+                "key",
                 "name"
               ]
             }
@@ -1319,12 +1330,11 @@
                     }
                   ]
                 },
-                "variant_sku": {
+                "variant_key": {
                   "anyOf": [
                     {
                       "type": "string",
-                      "minLength": 1,
-                      "maxLength": 80
+                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
                     },
                     {
                       "type": "null"

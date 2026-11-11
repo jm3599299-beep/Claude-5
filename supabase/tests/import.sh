@@ -19,7 +19,7 @@ F=supabase/tests/fixtures
 
 echo "1. invalid file is rejected with readable errors"
 out=$(npx tsx scripts/import-catalog.mts $F/invalid.json 2>&1) && fail "invalid accepted"
-for msg in "slug" "exige verified_at y source" "SKU duplicado" "has_dgpu=false" "RAM soldada" "no declarada" "foto oficial requiere"; do
+for msg in "slug" "exige verified_at y source" "clave de variante duplicada" "has_dgpu=false" "RAM soldada" "no declarada" "foto oficial requiere"; do
   grep -q "$msg" <<<"$out" || fail "missing error: $msg"; done
 
 echo "2. dry run changes nothing"
@@ -30,10 +30,10 @@ echo "3. import"
 npx tsx scripts/import-catalog.mts $F/valid.json >/dev/null
 [[ $(q "select count(*) from variants") == 2 ]] || fail "variants"
 [[ $(q "select count(*) from spec_sources where verified") == 3 ]] || fail "spec_sources"
-[[ $(q "select display_resolution from variants where sku='T1-A'") == "2560×1600" ]] || fail "resolution normalisation"
-[[ $(q "select has_dgpu from variants where sku='T1-A'") == "t" ]] || fail "has_dgpu inferred"
-[[ $(q "select has_dgpu from variants where sku='T1-B'") == "f" ]] || fail "has_dgpu false"
-[[ $(q "select array_to_string(ports, ',') from variants where sku='T1-A'") == "USB-C,HDMI" ]] || fail "array column"
+[[ $(q "select display_resolution from variants where variant_key='t1-a'") == "2560×1600" ]] || fail "resolution normalisation"
+[[ $(q "select has_dgpu from variants where variant_key='t1-a'") == "t" ]] || fail "has_dgpu inferred"
+[[ $(q "select has_dgpu from variants where variant_key='t1-b'") == "f" ]] || fail "has_dgpu false"
+[[ $(q "select array_to_string(ports, ',') from variants where variant_key='t1-a'") == "USB-C,HDMI" ]] || fail "array column"
 [[ $(q "select commercial_status from models") == "current" ]] || fail "status"
 [[ $(q "select count(*) from audit_log where table_name='models'") -ge 1 ]] || fail "audit"
 

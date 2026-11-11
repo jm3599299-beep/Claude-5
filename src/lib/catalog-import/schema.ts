@@ -64,7 +64,10 @@ const int = (min: number, max: number) => opt(z.number().int().min(min).max(max)
 
 export const variantSchema = z
   .object({
-    sku: text(80),
+    /** Identificador estable de la configuración (se usa en la URL). */
+    key: slug,
+    /** Número de pieza real del fabricante. Omitir si no se conoce con certeza: nunca inventarlo. */
+    sku: opt(text(80)),
     name: text(120),
     region: opt(text(60)),
     is_default: z.boolean().default(false),
@@ -86,7 +89,7 @@ export const variantSchema = z
     storage_upgradeable: opt(z.boolean()),
     display_size_in: opt(z.number().min(7).max(25)),
     display_resolution: opt(z.string().regex(/^\d{3,5}\s*[×x]\s*\d{3,5}$/, "resolución: ANCHOxALTO")),
-    display_panel: opt(text(40)),
+    display_panel: opt(text(80)),
     display_refresh_hz: int(30, 1000),
     display_brightness_nits: int(50, 5000),
     display_color_gamut: opt(text(80)),
@@ -131,7 +134,8 @@ export const variantSchema = z
       p.fields.forEach((f) => {
         if (seen.has(f)) ctx.addIssue({ code: "custom", path: ["provenance", i, "fields"], message: `campo «${f}» con más de una procedencia` });
         seen.add(f);
-        const val = (v as Record<string, unknown>)[f];
+        // "gpu" can be attributed when the source confirms there is NO dedicated GPU.
+        const val = f === "gpu" && v.has_dgpu === false ? true : (v as Record<string, unknown>)[f];
         if (val == null || (Array.isArray(val) && val.length === 0))
           ctx.addIssue({ code: "custom", path: ["provenance", i, "fields"], message: `no se puede atribuir fuente a «${f}» porque no tiene valor` });
       });
@@ -143,7 +147,7 @@ export const imageSchema = z
     url: httpUrl,
     alt: text(200),
     angle: opt(z.enum(["front", "side", "back", "top", "open", "closed", "keyboard", "ports"])),
-    variant_sku: opt(text(80)),
+    variant_key: opt(slug),
     is_official: z.boolean().default(false),
     source: opt(sourceKey),
     source_url: opt(httpUrl),
@@ -199,13 +203,16 @@ export const modelSchema = z
       ctx.addIssue({ code: "custom", path: ["commercial_status"], message: `«${s.value}» exige verified_at y source` });
     if (m.release_date && m.release_year && Number(m.release_date.slice(0, 4)) !== m.release_year)
       ctx.addIssue({ code: "custom", path: ["release_date"], message: "release_date no coincide con release_year" });
-    const skus = m.variants.map((v) => v.sku);
-    const dup = skus.find((s, i) => skus.indexOf(s) !== i);
-    if (dup) ctx.addIssue({ code: "custom", path: ["variants"], message: `SKU duplicado: ${dup}` });
+    const keys = m.variants.map((v) => v.key);
+    const dup = keys.find((s, i) => keys.indexOf(s) !== i);
+    if (dup) ctx.addIssue({ code: "custom", path: ["variants"], message: `clave de variante duplicada: ${dup}` });
+    const skus = m.variants.flatMap((v) => (v.sku ? [v.sku] : []));
+    const dupSku = skus.find((s, i) => skus.indexOf(s) !== i);
+    if (dupSku) ctx.addIssue({ code: "custom", path: ["variants"], message: `SKU duplicado: ${dupSku}` });
     if (m.variants.filter((v) => v.is_default).length > 1) ctx.addIssue({ code: "custom", path: ["variants"], message: "más de una variante is_default" });
     m.images.forEach((img, i) => {
-      if (img.variant_sku && !skus.includes(img.variant_sku))
-        ctx.addIssue({ code: "custom", path: ["images", i, "variant_sku"], message: `la variante ${img.variant_sku} no existe en este modelo` });
+      if (img.variant_key && !keys.includes(img.variant_key))
+        ctx.addIssue({ code: "custom", path: ["images", i, "variant_key"], message: `la variante ${img.variant_key} no existe en este modelo` });
     });
   });
 

@@ -28,7 +28,8 @@
       "published": false,
       "variants": [
         {
-          "sku": "NUMERO-DE-PRODUCTO",
+          "key": "clave-de-la-configuracion",
+          "sku": null,
           "name": "NOMBRE DE LA CONFIGURACIÓN",
           "is_default": true,
           "cpu": { "manufacturer": "FABRICANTE", "model": "MODELO EXACTO" },

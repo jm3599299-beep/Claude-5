@@ -23,17 +23,17 @@ autocompletado en el editor) y se importa en **una única transacción**: o entr
 
 ### Reglas que el validador impone
 - `commercial_status` `current` o `in_stores` exige `verified_at` y `source` (también lo impone la base de datos).
-- Cada variante tiene `sku` único dentro del modelo; como mucho una `is_default`.
+- Cada variante tiene una `key` única dentro del modelo (se usa en la URL `?variante=`) y, opcionalmente, `sku`: el número de pieza real del fabricante. **Nunca inventes un SKU**: si el fabricante no lo asocia a esa configuración exacta, omítelo. Como mucho una variante `is_default`.
 - `provenance`: indica qué fuente respalda qué campos. Un campo sin valor no puede tener fuente; un dato
   `verified` exige `url`; un campo no puede tener dos procedencias.
 - `has_dgpu: false` = sin GPU dedicada (no se muestra «Desconocido»). Si se indica `gpu`, se asume `true`.
 - Una imagen `is_official` exige `source` y `source_url`; una imagen `verified` exige `source_url`. Solo las imágenes
-  `verified` se muestran en el sitio. `variant_sku` asocia la foto a una configuración concreta.
+  `verified` se muestran en el sitio. `variant_key` asocia la foto a una configuración concreta.
 - `published: false` por defecto: un editor decide cuándo un modelo es visible.
 - Coherencia: RAM soldada ≤ RAM total, ranuras libres ≤ totales, `release_date` coincide con `release_year`.
 
 ### Comportamiento al reimportar
-- Idempotente: modelos por `slug`, variantes por (`modelo`, `sku`), imágenes por (`modelo`, `url`), componentes por
+- Idempotente: modelos por `slug`, variantes por (`modelo`, `key`), imágenes por (`modelo`, `url`), componentes por
   (`manufacturer`, `model`), fuentes por `name`.
 - Los campos del modelo y de las variantes importadas se sobrescriben con el contenido del archivo (el archivo es la
   fuente de verdad). La procedencia de cada variante importada se reemplaza completa.

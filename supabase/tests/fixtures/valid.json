@@ -1,30 +1,134 @@
 {
   "sources": {
-    "test-maker": { "name": "TEST Fabricante", "kind": "manufacturer", "homepage_url": "https://example.com", "is_official": true, "trust_level": 5 }
+    "test-maker": {
+      "name": "TEST Fabricante",
+      "kind": "manufacturer",
+      "homepage_url": "https://example.com",
+      "is_official": true,
+      "trust_level": 5
+    }
   },
-  "brands": [{ "slug": "test-brand", "name": "TEST Brand", "country": "Testland" }],
-  "families": [{ "brand": "test-brand", "slug": "test-family", "name": "TEST Family", "segment": "Gaming" }],
-  "cpus": [{ "manufacturer": "TestChip", "model": "TC 9000", "cores": 8, "threads": 16, "boost_clock_ghz": 5.1, "source": "test-maker" }],
-  "gpus": [
-    { "manufacturer": "TestGFX", "model": "TG 100", "vram_gb": 8, "vram_type": "GDDR6", "tgp_max_w": 100 },
-    { "manufacturer": "TestChip", "model": "TC Graphics", "is_integrated": true }
+  "brands": [
+    {
+      "slug": "test-brand",
+      "name": "TEST Brand",
+      "country": "Testland"
+    }
   ],
-  "models": [{
-    "brand": "test-brand", "family": "test-family", "slug": "test-laptop-1", "name": "TEST Laptop 1",
-    "release_year": 2026, "release_date": "2026-01-15", "category": "gaming", "use_cases": ["gaming"],
-    "commercial_status": { "value": "current", "verified_at": "2026-11-01", "source": "test-maker" },
-    "pros": ["TEST pro"], "published": true,
-    "variants": [
-      { "sku": "T1-A", "name": "TEST A", "is_default": true,
-        "cpu": { "manufacturer": "TestChip", "model": "TC 9000" }, "gpu": { "manufacturer": "TestGFX", "model": "TG 100" },
-        "igpu": { "manufacturer": "TestChip", "model": "TC Graphics" },
-        "ram_gb": 16, "ram_type": "DDR5", "storage_gb": 1000, "display_resolution": "2560 x 1600", "ports": ["USB-C", "HDMI"],
-        "provenance": [{ "source": "test-maker", "url": "https://example.com/spec", "fields": ["cpu", "ram_gb", "ports"], "verified": true }] },
-      { "sku": "T1-B", "name": "TEST B", "has_dgpu": false, "cpu": { "manufacturer": "TestChip", "model": "TC 9000" }, "ram_gb": 32 }
-    ],
-    "images": [
-      { "url": "https://example.com/a.png", "alt": "TEST frontal", "angle": "front", "is_official": true, "source": "test-maker",
-        "source_url": "https://example.com/press", "verified": true }
-    ]
-  }]
+  "families": [
+    {
+      "brand": "test-brand",
+      "slug": "test-family",
+      "name": "TEST Family",
+      "segment": "Gaming"
+    }
+  ],
+  "cpus": [
+    {
+      "manufacturer": "TestChip",
+      "model": "TC 9000",
+      "cores": 8,
+      "threads": 16,
+      "boost_clock_ghz": 5.1,
+      "source": "test-maker"
+    }
+  ],
+  "gpus": [
+    {
+      "manufacturer": "TestGFX",
+      "model": "TG 100",
+      "vram_gb": 8,
+      "vram_type": "GDDR6",
+      "tgp_max_w": 100
+    },
+    {
+      "manufacturer": "TestChip",
+      "model": "TC Graphics",
+      "is_integrated": true
+    }
+  ],
+  "models": [
+    {
+      "brand": "test-brand",
+      "family": "test-family",
+      "slug": "test-laptop-1",
+      "name": "TEST Laptop 1",
+      "release_year": 2026,
+      "release_date": "2026-01-15",
+      "category": "gaming",
+      "use_cases": [
+        "gaming"
+      ],
+      "commercial_status": {
+        "value": "current",
+        "verified_at": "2026-11-01",
+        "source": "test-maker"
+      },
+      "pros": [
+        "TEST pro"
+      ],
+      "published": true,
+      "variants": [
+        {
+          "sku": "T1-A",
+          "name": "TEST A",
+          "is_default": true,
+          "cpu": {
+            "manufacturer": "TestChip",
+            "model": "TC 9000"
+          },
+          "gpu": {
+            "manufacturer": "TestGFX",
+            "model": "TG 100"
+          },
+          "igpu": {
+            "manufacturer": "TestChip",
+            "model": "TC Graphics"
+          },
+          "ram_gb": 16,
+          "ram_type": "DDR5",
+          "storage_gb": 1000,
+          "display_resolution": "2560 x 1600",
+          "ports": [
+            "USB-C",
+            "HDMI"
+          ],
+          "provenance": [
+            {
+              "source": "test-maker",
+              "url": "https://example.com/spec",
+              "fields": [
+                "cpu",
+                "ram_gb",
+                "ports"
+              ],
+              "verified": true
+            }
+          ],
+          "key": "t1-a"
+        },
+        {
+          "name": "TEST B",
+          "has_dgpu": false,
+          "cpu": {
+            "manufacturer": "TestChip",
+            "model": "TC 9000"
+          },
+          "ram_gb": 32,
+          "key": "t1-b"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://example.com/a.png",
+          "alt": "TEST frontal",
+          "angle": "front",
+          "is_official": true,
+          "source": "test-maker",
+          "source_url": "https://example.com/press",
+          "verified": true
+        }
+      ]
+    }
+  ]
 }

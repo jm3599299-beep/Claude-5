@@ -6,8 +6,9 @@
   variantes, galería con ampliación y procedencia, análisis editorial, JSON-LD Product/BreadcrumbList y sitemap completo.
 - [x] **Fase 3** — Importador de catálogo JSON (`npm run catalog:import`): validación estricta, transacción por archivo,
   idempotente, procedencia por campo, `sync_runs`, revalidación de caché (`/api/revalidate`), JSON Schema para editores,
-  workflow que importa al fusionar en `main`. Pendiente: primeros datos reales verificados (requiere acceso de red a
-  fuentes oficiales o datos aportados) y edición desde el panel (Fase 8).
+  workflow que importa al fusionar en `main`. Primer lote real: MacBook Air 13"/15" M5 (6 configuraciones,
+  verificado en apple.com). Pendiente: adaptador Lenovo PSREF a nivel MTM, MacBook Pro, más marcas, y edición desde el panel (Fase 8).
+  Ver `docs/DATA_SOURCES.md`.
 - [ ] **Fase 4** — Galerías de fotos oficiales con procedencia y lightbox.
 - [ ] **Fase 5** — Precios USD/DOP/MXN, API de tipos de cambio, comparador 2–4 con enlaces compartibles.
 - [ ] **Fase 6** — Auth, comunidad, reseñas, moderación.

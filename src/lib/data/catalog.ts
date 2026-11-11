@@ -94,7 +94,7 @@ const MODEL_DETAIL_SELECT = `
   status_source:sources!models_status_source_id_fkey(name, homepage_url),
   images(id, variant_id, url, storage_path, alt, angle, is_official, is_placeholder, verified, credit, source_url, license, sort_order),
   variants(
-    id, sku, name, region, is_default, has_dgpu,
+    id, variant_key, sku, name, region, is_default, has_dgpu,
     ram_gb, ram_type, ram_speed_mts, ram_slots, ram_soldered_gb, ram_max_gb,
     storage_gb, storage_type, storage_interface, storage_slots, storage_free_slots, storage_upgradeable,
     display_size_in, display_resolution, display_panel, display_refresh_hz, display_brightness_nits, display_color_gamut, display_touch,

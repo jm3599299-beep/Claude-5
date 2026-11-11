@@ -118,6 +118,7 @@ export interface SpecSource {
 
 export interface Variant {
   id: string;
+  variant_key: string;
   sku: string | null;
   name: string;
   region: string | null;
