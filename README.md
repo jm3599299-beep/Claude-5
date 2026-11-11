@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LaptopVerse
 
-## Getting Started
+**El universo mundial de las laptops.** Plataforma internacional para investigar, comparar, conocer precios,
+leer noticias y compartir experiencias reales sobre laptops.
 
-First, run the development server:
+> Principio rector: LaptopVerse nunca presenta información ficticia como real. Sin datos verificados, la
+> interfaz lo dice. Ver [`docs/DATA_POLICY.md`](docs/DATA_POLICY.md).
+
+## Stack
+
+| Capa | Tecnología |
+| --- | --- |
+| Frontend / SSR / SEO | Next.js 16 (App Router, Cache Components, Partial Prefetching), React 19, TypeScript |
+| Estilos | Tailwind CSS 4, tokens propios (modo claro/oscuro) |
+| Backend | Supabase: PostgreSQL, Auth, Storage, Row Level Security |
+| Validación | Zod |
+| Automatización | GitHub Actions (CI, tareas semanales) |
+
+## Puesta en marcha
 
 ```bash
+npm install
+cp .env.example .env.local   # rellena las variables de Supabase
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sin variables de Supabase la app funciona y muestra estados vacíos explicando que la base de datos no está conectada.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Configurar Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Crea un proyecto en <https://supabase.com> (gratuito para empezar).
+2. **Project Settings → API**: copia `Project URL` → `NEXT_PUBLIC_SUPABASE_URL` y la clave `anon` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+3. La clave `service_role` → `SUPABASE_SERVICE_ROLE_KEY` **solo** en el servidor / secretos de GitHub. Nunca en el frontend.
+4. Aplica el esquema y los datos iniciales (SQL Editor o Supabase CLI):
+   ```bash
+   supabase link --project-ref <ref>
+   supabase db push              # aplica supabase/migrations
+   psql "$DATABASE_URL" -f supabase/seed.sql
+   ```
+5. Para hacerte administrador: `update profiles set role = 'admin' where id = '<tu-user-id>';`
 
-## Learn More
+## Estructura
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/app/              rutas (home, /laptops, /marcas, /metodologia, sitemap, robots)
+src/components/       brand (logo), layout (header/footer/tema), ui, home
+src/lib/data/         consultas públicas cacheadas ("use cache") y tipos
+src/lib/supabase/     clientes: public (anon, cacheable), server (sesión), admin (service role, solo servidor)
+supabase/migrations/  esquema SQL + RLS
+supabase/seed.sql     marcas y familias (sin modelos ni precios inventados)
+supabase/tests/       stubs + pruebas de seguridad para Postgres plano (CI)
+docs/                 arquitectura, política de datos, hoja de ruta
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` / `npm run build` / `npm start`
+- `npm run lint`
+- `npm run db:test` — valida migraciones y reglas de seguridad contra un Postgres local (`PGHOST`, `PGPORT`, `PGUSER`).
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Más detalle: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/ROADMAP.md`](docs/ROADMAP.md).

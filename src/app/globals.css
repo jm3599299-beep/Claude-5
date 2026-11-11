@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
+/* Tailwind dark variant driven by the `.dark` class set before first paint. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * LaptopVerse design tokens
+ * Primary: "Verse" indigo-violet — technology, trust.
+ * Accent: "Orbit" cyan — innovation, highlights.
+ * Neutrals: cool slate.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f7f8fc;
+  --surface: #ffffff;
+  --surface-2: #eef0f7;
+  --border: #dfe3ee;
+  --fg: #0d1222;
+  --fg-muted: #525c77;
+  --primary: #5b4cf0;
+  --primary-fg: #ffffff;
+  --primary-soft: #ecebfe;
+  --accent: #0891b2;
+  --accent-soft: #e0f6fb;
+  --success: #0f8a5f;
+  --warning: #b45309;
+  --danger: #c2334d;
+  --ring: #7c6ff5;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #070912;
+  --surface: #0e1220;
+  --surface-2: #161b2d;
+  --border: #232a42;
+  --fg: #eef1fb;
+  --fg-muted: #9aa3bf;
+  --primary: #8b80ff;
+  --primary-fg: #0b0d18;
+  --primary-soft: #1d1a45;
+  --accent: #22d3ee;
+  --accent-soft: #0b2a33;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --ring: #a89fff;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --animate-fade-up: fade-up 0.5s ease-out both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+  }
+  body {
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--primary-soft);
+  }
+}
+
+/* Decorative hero background: a subtle orbital gradient. */
+.lv-hero-bg {
+  background:
+    radial-gradient(60% 80% at 15% 0%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%),
+    radial-gradient(50% 70% at 90% 10%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 70%);
+}
+
+.lv-grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
