@@ -49,9 +49,14 @@ async function BrandContent({ params }: { params: Promise<{ slug: string }> }) {
       {brand.families.length ? (
         <ul className="mt-4 flex flex-wrap gap-2">
           {brand.families.map((f) => (
-            <li key={f.id} className="rounded-xl border border-border bg-surface px-4 py-2">
-              <span className="font-semibold">{f.name}</span>
-              {f.segment && <span className="ml-2 text-xs text-fg-muted">{f.segment}</span>}
+            <li key={f.id}>
+              <Link
+                href={`/marcas/${brand.slug}/${f.slug}`}
+                className="block rounded-xl border border-border bg-surface px-4 py-2 transition hover:border-primary hover:text-primary"
+              >
+                <span className="font-semibold">{f.name}</span>
+                {f.segment && <span className="ml-2 text-xs text-fg-muted">{f.segment}</span>}
+              </Link>
             </li>
           ))}
         </ul>

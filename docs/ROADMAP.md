@@ -1,7 +1,9 @@
 # Hoja de ruta
 
 - [x] **Fase 1** — Arquitectura, identidad visual (logo, paleta, tipografías, claro/oscuro), layout, esquema SQL + RLS, home.
-- [~] **Fase 2** — Navegación, home, catálogo con filtros y marcas listos. Pendiente: ficha técnica `/laptops/[slug]` con variantes.
+- [x] **Fase 2** — Navegación, home, catálogo con filtros, marcas, familias (`/marcas/[marca]/[familia]`) y ficha técnica
+  `/laptops/[slug]`: variantes con pestañas compartibles (`?variante=SKU`), verificación por campo, diferencias entre
+  variantes, galería con ampliación y procedencia, análisis editorial, JSON-LD Product/BreadcrumbList y sitemap completo.
 - [ ] **Fase 3** — Importador de datos (CSV/JSON con fuentes) y gestión de modelos/variantes.
 - [ ] **Fase 4** — Galerías de fotos oficiales con procedencia y lightbox.
 - [ ] **Fase 5** — Precios USD/DOP/MXN, API de tipos de cambio, comparador 2–4 con enlaces compartibles.

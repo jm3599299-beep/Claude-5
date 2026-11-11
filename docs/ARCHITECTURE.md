@@ -31,6 +31,13 @@ Todos los módulos de `src/lib/supabase` importan `server-only`, así que no pue
 - Cuentas: `favorites`, `lists`, `comparisons` (enlaces compartibles), `follows`, `notifications`, `view_history`.
 - Operación: `audit_log` (trigger en tablas editoriales), `sync_runs`, `check_rate_limit()`.
 
+## Ficha técnica
+- `src/lib/specs.ts` define los grupos de especificaciones y, para cada valor, su estado: **verificado** (hay
+  `spec_sources.verified`), **sin verificar** (hay valor sin fuente verificada) o **desconocido** (sin valor).
+- `variants.has_dgpu` distingue «no tiene GPU dedicada» (`false`) de «desconocido» (`null`).
+- Solo se muestran imágenes `verified` y no `is_placeholder`; las de `variant_id` nulo van en la galería del modelo y
+  las específicas dentro de la pestaña de su variante.
+
 ## Seguridad
 - RLS en todas las tablas; roles `user/moderator/editor/admin` en `profiles`.
 - Triggers impiden: auto-escalada de rol, que usuarios marquen reseñas como profesionales o alteren estado/contadores.
