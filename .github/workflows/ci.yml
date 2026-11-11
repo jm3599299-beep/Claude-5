@@ -11,6 +11,7 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run lint
+      - run: npm run catalog:validate -- data/catalog
       - run: npm run build
   database:
     runs-on: ubuntu-latest
@@ -23,4 +24,8 @@ jobs:
     env: { PGHOST: localhost, PGPORT: 5432, PGUSER: postgres, PGPASSWORD: postgres }
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
       - run: bash supabase/tests/run.sh
+      - run: bash supabase/tests/import.sh

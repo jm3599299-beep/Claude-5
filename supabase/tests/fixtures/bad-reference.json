@@ -1,0 +1,4 @@
+{
+  "models": [{ "brand": "test-brand", "slug": "test-laptop-2", "name": "TEST 2",
+    "variants": [{ "sku": "X", "name": "x", "cpu": { "manufacturer": "Nope", "model": "Missing" } }] }]
+}

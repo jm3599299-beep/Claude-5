@@ -1,0 +1,44 @@
+{
+  "$schema": "../schema/catalog.schema.json",
+  "sources": {
+    "clave-fuente": {
+      "name": "NOMBRE DE LA FUENTE (p. ej. ficha oficial del fabricante)",
+      "kind": "manufacturer",
+      "homepage_url": "https://REEMPLAZAR",
+      "is_official": true,
+      "trust_level": 5
+    }
+  },
+  "cpus": [
+    { "manufacturer": "FABRICANTE", "model": "MODELO EXACTO", "cores": null, "threads": null, "source": "clave-fuente" }
+  ],
+  "gpus": [],
+  "models": [
+    {
+      "brand": "slug-de-marca-existente",
+      "family": "slug-de-familia-existente",
+      "slug": "marca-modelo-generacion-ano",
+      "name": "NOMBRE COMERCIAL EXACTO",
+      "generation": null,
+      "release_year": null,
+      "category": null,
+      "use_cases": [],
+      "commercial_status": { "value": "unverified" },
+      "official_url": null,
+      "published": false,
+      "variants": [
+        {
+          "sku": "NUMERO-DE-PRODUCTO",
+          "name": "NOMBRE DE LA CONFIGURACIÓN",
+          "is_default": true,
+          "cpu": { "manufacturer": "FABRICANTE", "model": "MODELO EXACTO" },
+          "ram_gb": null,
+          "provenance": [
+            { "source": "clave-fuente", "url": "https://URL-DE-LA-FICHA", "fields": ["cpu"], "verified": true, "verified_at": "AAAA-MM-DD" }
+          ]
+        }
+      ],
+      "images": []
+    }
+  ]
+}

@@ -48,6 +48,9 @@ src/lib/data/         consultas públicas cacheadas ("use cache") y tipos
 src/lib/supabase/     clientes: public (anon, cacheable), server (sesión), admin (service role, solo servidor)
 supabase/migrations/  esquema SQL + RLS
 supabase/seed.sql     marcas y familias (sin modelos ni precios inventados)
+src/lib/catalog-import/  esquema y motor del importador
+scripts/              CLI de importación y generador de JSON Schema
+data/catalog/         archivos de datos del catálogo (revisables por PR)
 supabase/tests/       stubs + pruebas de seguridad para Postgres plano (CI)
 docs/                 arquitectura, política de datos, hoja de ruta
 ```
@@ -56,6 +59,8 @@ docs/                 arquitectura, política de datos, hoja de ruta
 
 - `npm run dev` / `npm run build` / `npm start`
 - `npm run lint`
-- `npm run db:test` — valida migraciones y reglas de seguridad contra un Postgres local (`PGHOST`, `PGPORT`, `PGUSER`).
+- `npm run db:test` — valida migraciones, reglas de seguridad y el importador contra un Postgres local (`PGHOST`, `PGPORT`, `PGUSER`).
+- `npm run catalog:validate -- data/catalog` / `npm run catalog:import -- <ruta> [--dry-run]` — ver [`docs/IMPORTING.md`](docs/IMPORTING.md).
+- `npm run catalog:schema` — regenera el JSON Schema del formato de importación.
 
 Más detalle: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/ROADMAP.md`](docs/ROADMAP.md).

@@ -1,0 +1,13 @@
+{
+  "sources": {},
+  "models": [{
+    "brand": "test-brand", "slug": "Bad Slug", "name": "X",
+    "commercial_status": { "value": "current" },
+    "variants": [
+      { "sku": "D", "name": "a", "gpu": { "manufacturer": "A", "model": "B" }, "has_dgpu": false, "ram_gb": 8, "ram_soldered_gb": 16,
+        "provenance": [{ "source": "missing", "fields": ["wifi"], "verified": true }] },
+      { "sku": "D", "name": "b" }
+    ],
+    "images": [{ "url": "https://example.com/x.png", "alt": "x", "is_official": true }]
+  }]
+}

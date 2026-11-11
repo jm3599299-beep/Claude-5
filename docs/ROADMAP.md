@@ -4,7 +4,10 @@
 - [x] **Fase 2** — Navegación, home, catálogo con filtros, marcas, familias (`/marcas/[marca]/[familia]`) y ficha técnica
   `/laptops/[slug]`: variantes con pestañas compartibles (`?variante=SKU`), verificación por campo, diferencias entre
   variantes, galería con ampliación y procedencia, análisis editorial, JSON-LD Product/BreadcrumbList y sitemap completo.
-- [ ] **Fase 3** — Importador de datos (CSV/JSON con fuentes) y gestión de modelos/variantes.
+- [x] **Fase 3** — Importador de catálogo JSON (`npm run catalog:import`): validación estricta, transacción por archivo,
+  idempotente, procedencia por campo, `sync_runs`, revalidación de caché (`/api/revalidate`), JSON Schema para editores,
+  workflow que importa al fusionar en `main`. Pendiente: primeros datos reales verificados (requiere acceso de red a
+  fuentes oficiales o datos aportados) y edición desde el panel (Fase 8).
 - [ ] **Fase 4** — Galerías de fotos oficiales con procedencia y lightbox.
 - [ ] **Fase 5** — Precios USD/DOP/MXN, API de tipos de cambio, comparador 2–4 con enlaces compartibles.
 - [ ] **Fase 6** — Auth, comunidad, reseñas, moderación.

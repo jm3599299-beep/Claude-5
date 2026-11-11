@@ -1,0 +1,28 @@
+name: Catalog import
+on:
+  push:
+    branches: [main]
+    paths: ["data/catalog/**"]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Simular (importar y revertir)"
+        type: boolean
+        default: true
+concurrency: catalog-import
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run catalog:validate -- data/catalog
+      - name: Import
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REVALIDATE_URL: ${{ secrets.REVALIDATE_URL }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: npm run catalog:import -- data/catalog ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run' || '' }}
