@@ -18,7 +18,7 @@ export interface SpecGroup {
 const num = (n: number | null | undefined, unit = "", digits?: number) =>
   n === null || n === undefined ? null : `${digits !== undefined ? Number(n).toFixed(digits) : Number(n)}${unit ? ` ${unit}` : ""}`;
 const bool = (b: boolean | null | undefined) => (b === null || b === undefined ? null : b ? "Sí" : "No");
-const list = (a: string[] | null | undefined) => (a && a.length ? a.join(" · ") : null);
+const list = (a: string[] | null | undefined) => (a && a.length ? a.join("\n") : null);
 const text = (s: string | null | undefined) => (s && s.trim() ? s : null);
 
 export function formatStorage(gb: number | null | undefined) {

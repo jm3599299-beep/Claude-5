@@ -52,3 +52,25 @@ autocompletado en el editor) y se importa en **una única transacción**: o entr
 | `DATABASE_URL` | Supabase → Project Settings → Database → Connection string (URI). Secreto. |
 | `REVALIDATE_URL` | `https://<tu-dominio>/api/revalidate` |
 | `REVALIDATE_SECRET` | `openssl rand -hex 32`; el mismo valor en el servidor web y en GitHub. Secreto. |
+
+## Lenovo PSREF (`npm run psref:convert`)
+
+Convierte las exportaciones **Excel por modelo (MTM)** de Lenovo PSREF al formato del catálogo.
+
+> Los términos de uso de Lenovo prohíben la recopilación automatizada de información de sus sitios. Este adaptador
+> **no accede a PSREF**: un editor descarga a mano las exportaciones (página del modelo → botón **Excel**).
+
+1. En `psref.lenovo.com`, abre el producto (p. ej. *ThinkBook 14 G10 IWC*) y, para cada MTM que quieras publicar,
+   pulsa **Excel**. Guarda los archivos en una carpeta (un producto por carpeta).
+2. `npm run psref:convert -- ruta/carpeta --date AAAA-MM-DD` (fecha de descarga). Genera
+   `data/catalog/lenovo-<producto>.json` (usa `--out` y `--force` para cambiarlo/sobrescribirlo).
+3. Revisa el informe: los campos que no se pudieron interpretar quedan como «Desconocido» y se listan.
+4. Valida e importa como cualquier otro archivo (`catalog:validate`, `catalog:import --dry-run`, PR).
+
+Cómo se interpreta:
+- 1 producto PSREF → 1 modelo; cada MTM → 1 variante con `sku` = número de pieza real de Lenovo.
+- Familia deducida del nombre (ThinkPad, ThinkBook, IdeaPad, Yoga, Legion, LOQ). `release_date` = *Announce Date*.
+- Procedencia: cada campo con valor apunta a la página PSREF del MTM, verificado en la fecha indicada.
+- **Peso «Starting at …»**: es el mínimo de la plataforma, no el de la configuración → no se asigna.
+- **Estado comercial**: `unverified` (PSREF no confirma disponibilidad). `published: false` hasta revisión editorial.
+- Los símbolos ™/® se eliminan; los valores se conservan tal como los publica Lenovo (sin traducir).

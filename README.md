@@ -63,6 +63,7 @@ docs/                 arquitectura, política de datos, hoja de ruta
 - `npm run catalog:validate -- data/catalog` / `npm run catalog:import -- <ruta> [--dry-run]` — ver [`docs/IMPORTING.md`](docs/IMPORTING.md).
 - `npm run catalog:schema` — regenera el JSON Schema del formato de importación.
 - `npm run images:check -- data/catalog` / `npm run images:commons -- "File:…"` — imágenes con licencia (ver `docs/IMPORTING.md`).
+- `npm run psref:convert -- <exportaciones.xlsx>` — adaptador Lenovo PSREF (ver `docs/IMPORTING.md`).
 - `npm run test:unit` — pruebas unitarias.
 
 Más detalle: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/ROADMAP.md`](docs/ROADMAP.md).

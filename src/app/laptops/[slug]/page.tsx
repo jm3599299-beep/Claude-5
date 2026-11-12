@@ -157,7 +157,7 @@ function VariantDiff({ variants }: { variants: Variant[] }) {
                 {variants.map((v) => {
                   const val = row.value(v);
                   return (
-                    <td key={v.id} className={`px-4 py-2.5 ${val ? "" : "italic text-fg-muted/70"}`}>
+                    <td key={v.id} className={`px-4 py-2.5 ${val ? "whitespace-pre-line" : "italic text-fg-muted/70"}`}>
                       {val ?? "Desconocido"}
                     </td>
                   );

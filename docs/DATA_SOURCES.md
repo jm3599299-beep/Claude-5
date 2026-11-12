@@ -4,6 +4,7 @@
 
 | Archivo | Modelos | Fuente | Verificado |
 | --- | --- | --- | --- |
+| `data/catalog/lenovo-thinkbook-14-g10-iwc.json` | ThinkBook 14 G10 IWC — 1 MTM (22DC001DUS, EE. UU.); no publicado | Exportación Excel de PSREF del MTM | 2026-11-12 |
 | `data/catalog/apple-macbook-air.json` | MacBook Air (13-inch, M5), MacBook Air (15-inch, M5) — 3 configuraciones estándar cada uno | [Apple — MacBook Air Tech Specs](https://www.apple.com/macbook-air/specs/); nombre, año e identificador: [Identify your MacBook Air model](https://support.apple.com/en-us/102869) | 2026-11-11 |
 
 ### Notas del lote Apple
@@ -27,12 +28,14 @@
 ## Fuentes evaluadas
 
 ### Lenovo PSREF (`psref.lenovo.com`)
-- Fuente oficial y muy completa. Las fichas PDF de plataforma (`/syspool/Sys/PDF/<Serie>/<Producto>/<Producto>_Spec.pdf`)
-  describen **todas las opciones configurables** de una plataforma; no deben importarse como una sola variante.
-- Las configuraciones reales son los **MTM** (p. ej. modelos `21xx…`), cada uno con su propia página en la aplicación web
-  de PSREF (requiere renderizar JavaScript). Pendiente: adaptador PSREF → formato de importación, a nivel de MTM.
-- PSREF indica que no confirma disponibilidad: los modelos Lenovo deben importarse con `commercial_status` `unverified`
-  salvo comprobación en la tienda oficial.
+- Fuente oficial. Cada configuración real (MTM, p. ej. `22DC001DUS`) tiene página propia con exportación **Excel/PDF**.
+  Las fichas PDF de plataforma describen todas las opciones configurables: no se importan como una variante.
+- **Términos de Lenovo** (enlazados desde PSREF): prohíben procesos automáticos de alto volumen para acceder, buscar o
+  recopilar información (robots, arañas, scripts) y reproducir/explotar el sitio fuera de uso interno. Por eso el
+  adaptador (`npm run psref:convert`) solo convierte exportaciones descargadas a mano; no hay rastreador.
+- PSREF indica que no confirma disponibilidad: los modelos Lenovo se importan con estado `unverified`.
+- Primer lote: un único MTM descargado manualmente para construir y probar el adaptador. Para publicar el producto, un
+  editor debe descargar los MTM de los mercados de interes (EE. UU., México, República Dominicana) y revisar el resultado.
 
 ### Apple MacBook Pro
 - La ficha vigente combina chips M6 y M5 Pro/M5 Max en tamaños de 14" y 16", y hay un modelo anunciado el

@@ -64,7 +64,7 @@ export function SpecTable({ variant }: { variant: Variant }) {
                   <div key={r.label} className="grid grid-cols-[40%_1fr] gap-3 px-4 py-2.5 text-sm">
                     <dt className="text-fg-muted">{r.label}</dt>
                     <dd className="flex items-start justify-between gap-2">
-                      <span className={value ? "" : "italic text-fg-muted/70"}>{value ?? "Desconocido"}</span>
+                      <span className={value ? "whitespace-pre-line" : "italic text-fg-muted/70"}>{value ?? "Desconocido"}</span>
                       <Mark state={state} sourceName={source?.source?.name} sourceUrl={source?.source_url} date={source?.verified_at} />
                     </dd>
                   </div>

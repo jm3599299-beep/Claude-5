@@ -7,7 +7,8 @@
 - [x] **Fase 3** — Importador de catálogo JSON (`npm run catalog:import`): validación estricta, transacción por archivo,
   idempotente, procedencia por campo, `sync_runs`, revalidación de caché (`/api/revalidate`), JSON Schema para editores,
   workflow que importa al fusionar en `main`. Primer lote real: MacBook Air 13"/15" M5 (6 configuraciones,
-  verificado en apple.com). Pendiente: adaptador Lenovo PSREF a nivel MTM, MacBook Pro, más marcas, y edición desde el panel (Fase 8).
+  verificado en apple.com). Adaptador Lenovo PSREF por MTM (`psref:convert`, exportaciones descargadas a mano)
+  con 1 MTM de prueba. Pendiente: MacBook Pro, más marcas y MTM, y edición desde el panel (Fase 8).
   Ver `docs/DATA_SOURCES.md`.
 - [x] **Fase 4** — Imágenes: base de derechos obligatoria (BD + validador), hosts autorizados, `next/image` (AVIF/WebP,
   tamaños adaptativos, carga diferida), atribución CC en galería, verificador técnico (`images:check`), asistente de
