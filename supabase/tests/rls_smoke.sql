@@ -14,7 +14,7 @@ select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001'
 update public.profiles set role='admin' where id=auth.uid();
 \echo '--- 2. user tries to insert a brand (expect RLS ERROR)'
 insert into public.brands (slug,name) values ('x','X');
-\echo '--- 3. user posts review flagged professional (expect is_professional=f)'
+\echo '--- 3. user posts review flagged professional (expect is_professional=f, status=pending: new account)'
 insert into public.reviews (model_id,user_id,rating,title,body,is_professional)
   select id, auth.uid(), 5, 'Muy buena', repeat('texto de prueba ',5), true from public.models;
 select is_professional, status from public.reviews;

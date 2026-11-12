@@ -21,7 +21,9 @@
   Precios reales cargados: lanzamiento en EE. UU. del MacBook Air M5 (13" y 15", configuración base).
   Pendiente: precios de tiendas en DO/MX (requiere fuentes autorizadas: APIs de afiliados o carga manual).
 - [x] **Extra** — «¿Para quién es esta laptop?» por configuración (ver `docs/AUDIENCE.md`).
-- [ ] **Fase 6** — Auth, comunidad, reseñas, moderación.
+- [x] **Fase 6** — Cuentas (Supabase Auth), comunidad por modelo (reseñas, comentarios con respuestas, me gusta, reportes,
+  fotos propias con moderación, favoritos), feed `/comunidad`, normas, moderación y anti-spam (ver `docs/COMMUNITY.md`).
+  Pendiente: listas, seguir modelos, notificaciones e historial (cuentas avanzadas) y cola de moderación en el panel (Fase 8).
 - [ ] **Fase 7** — Ingesta semanal de noticias (GitHub Actions cron + RSS), LaptopVerse Weekly, revisión editorial.
 - [ ] **Fase 8** — Panel administrativo, SEO avanzado (JSON-LD, OG por página), endurecimiento de seguridad.
 - [ ] **Fase 9** — Pruebas E2E completas.

@@ -16,6 +16,7 @@ export const mainNav: { href: string; label: string }[] = [
   { href: "/laptops", label: "Catálogo" },
   { href: "/marcas", label: "Marcas" },
   { href: "/comparar", label: "Comparar" },
+  { href: "/comunidad", label: "Comunidad" },
 ];
 
 export const useCases = [

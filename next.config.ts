@@ -14,7 +14,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       ...IMAGE_HOSTS.map((hostname) => ({ protocol: "https" as const, hostname, pathname: "/**" })),
       ...(storageHost
-        ? [{ protocol: localSupabase ? ("http" as const) : ("https" as const), hostname: storageHost, pathname: "/storage/v1/object/public/**" }]
+        ? (["/storage/v1/object/public/**", "/storage/v1/object/sign/user-photos/**"] as const).map((pathname) => ({
+            protocol: localSupabase ? ("http" as const) : ("https" as const),
+            hostname: storageHost,
+            pathname,
+          }))
         : []),
     ],
   },

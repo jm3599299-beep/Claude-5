@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { Container } from "@/components/ui/container";
@@ -5,6 +6,7 @@ import { mainNav } from "@/lib/site";
 import { SearchBar } from "./search-bar";
 import { ThemeToggle } from "./theme-toggle";
 import { MobileNav } from "./mobile-nav";
+import { UserMenu, UserMenuFallback } from "./user-menu";
 
 export function Header() {
   return (
@@ -27,6 +29,9 @@ export function Header() {
         </div>
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           <ThemeToggle />
+          <Suspense fallback={<UserMenuFallback />}>
+            <UserMenu />
+          </Suspense>
           <MobileNav items={mainNav} />
         </div>
       </Container>

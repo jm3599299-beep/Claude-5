@@ -7,6 +7,11 @@ import { getLatestRates, getModelDetail } from "@/lib/data/catalog";
 import { PriceSection } from "@/components/laptop/price-section";
 import { AudienceSection } from "@/components/laptop/audience-section";
 import { cachedNow } from "@/lib/now";
+import { CommunitySection } from "@/components/community/community-section";
+import { FavoriteButton } from "@/components/community/favorite-button";
+import { getCurrentUser } from "@/lib/auth";
+import { getServerClient } from "@/lib/supabase/server";
+import { EXPERIENCE_TAG_IDS } from "@/lib/community/validation";
 import type { ModelDetail, Variant } from "@/lib/data/types";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -290,6 +295,14 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
               <KeySpecs variant={defaultVariant} />
             </div>
           )}
+          <div className="flex flex-wrap items-center gap-2">
+            <Suspense fallback={<span className="inline-block h-8 w-24 animate-pulse rounded-lg bg-surface-2" />}>
+              <FavoriteSlot modelId={model.id} slug={model.slug} />
+            </Suspense>
+            <a href="#comunidad" className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:border-primary hover:text-primary">
+              Opiniones de usuarios
+            </a>
+          </div>
           <a href="#especificaciones" className="mr-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
             ¿Para quién es esta laptop? ↓
           </a>
@@ -363,6 +376,30 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
   );
 }
 
+/** Request-time: whether the visitor saved this laptop. */
+async function FavoriteSlot({ modelId, slug }: { modelId: string; slug: string }) {
+  const user = await getCurrentUser();
+  let saved = false;
+  if (user) {
+    const db = (await getServerClient())!;
+    const { count } = await db.from("favorites").select("model_id", { count: "exact", head: true }).eq("user_id", user.id).eq("model_id", modelId);
+    saved = Boolean(count);
+  }
+  return <FavoriteButton modelId={modelId} initial={saved} loggedIn={Boolean(user)} next={`/laptops/${slug}`} />;
+}
+
+async function CommunityBlock({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: PageProps<"/laptops/[slug]">["searchParams"] }) {
+  const [{ slug }, sp] = await Promise.all([params, searchParams]);
+  const res = await getModelDetail(slug);
+  const model = res.data;
+  if (!model) return null;
+  const raw = Array.isArray(sp.experiencia) ? sp.experiencia[0] : sp.experiencia;
+  const tag = raw && EXPERIENCE_TAG_IDS.includes(raw) ? raw : null;
+  return (
+    <CommunitySection modelId={model.id} modelSlug={model.slug} modelName={model.name} variants={model.variants.map((v) => ({ id: v.id, name: v.name }))} tag={tag} />
+  );
+}
+
 function DetailSkeleton() {
   return (
     <div className="grid animate-pulse gap-10 lg:grid-cols-[1.1fr_1fr]" aria-busy="true" aria-label="Cargando ficha">
@@ -381,6 +418,9 @@ export default function LaptopPage(props: PageProps<"/laptops/[slug]">) {
     <Container className="py-10">
       <Suspense fallback={<DetailSkeleton />}>
         <ModelContent params={props.params} />
+      </Suspense>
+      <Suspense fallback={<div className="mt-14 h-40 animate-pulse rounded-2xl bg-surface-2" aria-busy="true" />}>
+        <CommunityBlock params={props.params} searchParams={props.searchParams} />
       </Suspense>
     </Container>
   );

@@ -28,7 +28,7 @@ export function isAllowedImageUrl(raw: string): boolean {
     const storage = supabaseStorageHost();
     const localStorage = isLocalSupabase() && u.hostname === storage && u.protocol === "http:";
     if (u.protocol !== "https:" && !localStorage) return false;
-    if (storage && u.hostname === storage) return u.pathname.startsWith("/storage/v1/object/public/");
+    if (storage && u.hostname === storage) return u.pathname.startsWith("/storage/v1/object/public/") || u.pathname.startsWith("/storage/v1/object/sign/user-photos/");
     return (IMAGE_HOSTS as readonly string[]).includes(u.hostname);
   } catch {
     return false;
