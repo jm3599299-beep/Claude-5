@@ -37,7 +37,7 @@ Sin variables de Supabase la app funciona y muestra estados vacíos explicando q
    supabase db push              # aplica supabase/migrations
    psql "$DATABASE_URL" -f supabase/seed.sql
    ```
-5. Para hacerte administrador: `update profiles set role = 'admin' where id = '<tu-user-id>';`
+5. Para hacerte administrador (editor SQL de Supabase): `update profiles set role = 'admin' where id = '<tu-user-id>';`
 
 ## Estructura
 
@@ -65,6 +65,7 @@ docs/                 arquitectura, política de datos, hoja de ruta
 - `npm run images:check -- data/catalog` / `npm run images:commons -- "File:…"` — imágenes con licencia (ver `docs/IMPORTING.md`).
 - `npm run psref:convert -- <exportaciones.xlsx>` — adaptador Lenovo PSREF (ver `docs/IMPORTING.md`).
 - `npm run fx:sync` — guarda los tipos de cambio USD→DOP/MXN del día (`DATABASE_URL`; opcional `EXCHANGERATE_API_KEY`).
+- `npm run news:weekly [-- --dry-run]` — recopilación semanal de noticias y Weekly (ver `docs/NEWS.md`).
 - `npm run test:unit` — pruebas unitarias.
 
 Más detalle: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/ROADMAP.md`](docs/ROADMAP.md).

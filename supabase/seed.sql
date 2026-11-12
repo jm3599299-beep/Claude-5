@@ -95,3 +95,26 @@ insert into public.sources (name, kind, homepage_url, is_official, trust_level) 
   ('Lenovo StoryHub', 'press_center', 'https://news.lenovo.com', true, 5),
   ('ASUS Pressroom',  'press_center', 'https://press.asus.com', true, 5),
   ('Qualcomm News',   'press_center', 'https://www.qualcomm.com/news', true, 5);
+
+-- Fuentes y feeds de noticias verificados (respuesta RSS/Atom válida el 2026-11-12).
+insert into public.sources (name, kind, homepage_url, is_official, trust_level) values
+  ('Windows Blog (Microsoft)', 'press_center', 'https://blogs.windows.com', true, 5),
+  ('Dell Blog', 'manufacturer', 'https://www.dell.com/en-us/blog/', true, 4),
+  ('The Verge', 'media', 'https://www.theverge.com', false, 4),
+  ('Notebookcheck', 'media', 'https://www.notebookcheck.net', false, 4),
+  ('Tom''s Hardware', 'media', 'https://www.tomshardware.com', false, 4);
+
+with f(source, url, auto, label, notes) as (values
+  ('AMD Newsroom', 'https://ir.amd.com/news-events/press-releases/rss', true, 'official', null),
+  ('NVIDIA Newsroom', 'https://nvidianews.nvidia.com/releases.xml', true, 'official', null),
+  ('Apple Newsroom', 'https://www.apple.com/newsroom/rss-feed.rss', true, 'official', 'Feed RSS ofrecido para sindicación. Las imágenes NO se reutilizan (términos de apple.com).'),
+  ('Lenovo StoryHub', 'https://news.lenovo.com/feed/', true, 'official', null),
+  ('Windows Blog (Microsoft)', 'https://blogs.windows.com/feed/', true, 'official', null),
+  ('Dell Blog', 'https://www.dell.com/en-us/blog/feed/', false, 'official', 'Blog corporativo: mezcla noticias e historias; revisión editorial.'),
+  ('The Verge', 'https://www.theverge.com/rss/laptops/index.xml', false, 'analysis', 'Medio: siempre revisión editorial.'),
+  ('Notebookcheck', 'https://www.notebookcheck.net/RSS-Feed-Notebook-Reviews.8156.0.html', false, 'analysis', 'Medio: siempre revisión editorial.'),
+  ('Tom''s Hardware', 'https://www.tomshardware.com/feeds.xml', false, 'analysis', 'Medio: siempre revisión editorial.')
+)
+insert into public.news_feeds (source_id, feed_url, auto_publish, default_label, notes)
+select s.id, f.url, f.auto, f.label::public.news_label, f.notes from f join public.sources s on s.name = f.source
+on conflict (feed_url) do nothing;

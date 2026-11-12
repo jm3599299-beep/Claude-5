@@ -1,0 +1,29 @@
+name: News weekly
+on:
+  schedule:
+    - cron: "17 9 * * 1" # lunes 09:17 UTC: recopila la semana y arma el Weekly de la semana anterior
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Simular (no escribe en la base de datos)"
+        type: boolean
+        default: false
+concurrency: news-weekly
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Collect news
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REVALIDATE_URL: ${{ secrets.REVALIDATE_URL }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          NEWS_AUTO_PUBLISH_WEEKLY: ${{ vars.NEWS_AUTO_PUBLISH_WEEKLY }}
+        run: npm run news:weekly -- ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run' || '' }}
