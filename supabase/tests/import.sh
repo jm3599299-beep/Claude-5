@@ -19,7 +19,7 @@ F=supabase/tests/fixtures
 
 echo "1. invalid file is rejected with readable errors"
 out=$(npx tsx scripts/import-catalog.mts $F/invalid.json 2>&1) && fail "invalid accepted"
-for msg in "slug" "exige verified_at y source" "clave de variante duplicada" "has_dgpu=false" "RAM soldada" "no declarada" "foto oficial requiere"; do
+for msg in "slug" "exige verified_at y source" "clave de variante duplicada" "has_dgpu=false" "RAM soldada" "no declarada" "foto oficial requiere" "host no autorizado" "atribución requieren"; do
   grep -q "$msg" <<<"$out" || fail "missing error: $msg"; done
 
 echo "2. dry run changes nothing"

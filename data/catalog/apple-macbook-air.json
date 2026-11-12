@@ -15,6 +15,14 @@
       "is_official": true,
       "trust_level": 5,
       "notes": "Fuente del nombre oficial, año de introducción (2026) e identificador de modelo. Los números de pieza se publican por color/región sin correspondencia con cada configuración, por eso no se asignan a variantes."
+    },
+    "apple-newsroom-m5-air": {
+      "name": "Apple Newsroom — Apple introduces the new MacBook Air with M5",
+      "kind": "press_center",
+      "homepage_url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+      "is_official": true,
+      "trust_level": 5,
+      "notes": "Comunicado del 3 de marzo de 2026: reservas desde el 4 de marzo, disponibilidad desde el 11 de marzo de 2026. Precio de partida: 13\" 1.099 USD (999 USD educación); 15\" 1.299 USD (1.199 USD educación). Las fotos del comunicado NO tienen licencia de reutilización (términos de apple.com)."
     }
   },
   "cpus": [
@@ -59,7 +67,7 @@
         "verified_at": "2026-11-11",
         "source": "apple-specs"
       },
-      "summary": "MacBook Air de 13 pulgadas con chip Apple M5 (CPU de 10 núcleos: 4 «super cores» y 6 de eficiencia), presentado en 2026. Identificador de modelo Mac17,3. Configuraciones estándar listadas por Apple; ampliables de fábrica hasta 32 GB de memoria unificada y 4 TB de SSD.",
+      "summary": "MacBook Air de 13 pulgadas con chip Apple M5 (CPU de 10 núcleos: 4 «super cores» y 6 de eficiencia), presentado el 3 de marzo de 2026 y disponible desde el 11 de marzo de 2026. Identificador de modelo Mac17,3. Configuraciones estándar listadas por Apple; ampliables de fábrica hasta 32 GB de memoria unificada y 4 TB de SSD.",
       "official_url": "https://www.apple.com/macbook-air/specs/",
       "published": true,
       "variants": [
@@ -295,7 +303,8 @@
           ]
         }
       ],
-      "images": []
+      "images": [],
+      "release_date": "2026-03-11"
     },
     {
       "brand": "apple",
@@ -314,7 +323,7 @@
         "verified_at": "2026-11-11",
         "source": "apple-specs"
       },
-      "summary": "MacBook Air de 15 pulgadas con chip Apple M5 (CPU de 10 núcleos: 4 «super cores» y 6 de eficiencia), presentado en 2026. Identificador de modelo Mac17,4. Configuraciones estándar listadas por Apple; ampliables de fábrica hasta 32 GB de memoria unificada y 4 TB de SSD.",
+      "summary": "MacBook Air de 15 pulgadas con chip Apple M5 (CPU de 10 núcleos: 4 «super cores» y 6 de eficiencia), presentado el 3 de marzo de 2026 y disponible desde el 11 de marzo de 2026. Identificador de modelo Mac17,4. Configuraciones estándar listadas por Apple; ampliables de fábrica hasta 32 GB de memoria unificada y 4 TB de SSD.",
       "official_url": "https://www.apple.com/macbook-air/specs/",
       "published": true,
       "variants": [
@@ -550,7 +559,8 @@
           ]
         }
       ],
-      "images": []
+      "images": [],
+      "release_date": "2026-03-11"
     }
   ]
 }

@@ -1367,6 +1367,23 @@
                     }
                   ]
                 },
+                "rights_basis": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "cc0",
+                        "cc-by",
+                        "cc-by-sa",
+                        "written-permission",
+                        "own"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "license": {
                   "anyOf": [
                     {
@@ -1379,12 +1396,47 @@
                     }
                   ]
                 },
+                "license_url": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "author": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "rights_reference": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "credit": {
                   "anyOf": [
                     {
                       "type": "string",
                       "minLength": 1,
-                      "maxLength": 120
+                      "maxLength": 160
                     },
                     {
                       "type": "null"

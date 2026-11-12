@@ -6,6 +6,7 @@
  * source declared in the same file. See docs/IMPORTING.md.
  */
 import { z } from "zod";
+import { IMAGE_HOSTS, isAllowedImageUrl } from "../images/hosts.ts";
 
 export const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "slug: minúsculas, números y guiones");
 const sourceKey = z.string().regex(/^[a-z0-9][a-z0-9-_]*$/, "clave de fuente inválida");
@@ -142,25 +143,42 @@ export const variantSchema = z
     });
   });
 
+export const RIGHTS_BASIS = ["cc0", "cc-by", "cc-by-sa", "written-permission", "own"] as const;
+
 export const imageSchema = z
   .object({
-    url: httpUrl,
+    url: httpUrl.refine(isAllowedImageUrl, {
+      message: `host no autorizado para imágenes (permitidos: ${IMAGE_HOSTS.join(", ")} o Supabase Storage público)`,
+    }),
     alt: text(200),
     angle: opt(z.enum(["front", "side", "back", "top", "open", "closed", "keyboard", "ports"])),
     variant_key: opt(slug),
+    /** Provided by the manufacturer (press kit) — still needs a rights basis to be shown. */
     is_official: z.boolean().default(false),
     source: opt(sourceKey),
+    /** Page where the image is published (Commons file page, press kit page…). */
     source_url: opt(httpUrl),
+    rights_basis: opt(z.enum(RIGHTS_BASIS)),
     license: opt(text(120)),
-    credit: opt(text(120)),
+    license_url: opt(httpUrl),
+    author: opt(text(160)),
+    rights_reference: opt(text(300)),
+    credit: opt(text(160)),
     verified: z.boolean().default(false),
     verified_at: opt(isoDateTime),
     sort_order: z.number().int().min(0).max(100).default(0),
   })
   .superRefine((img, ctx) => {
-    if (img.is_official && (!img.source || !img.source_url))
-      ctx.addIssue({ code: "custom", path: ["is_official"], message: "una foto oficial requiere source y source_url" });
-    if (img.verified && !img.source_url) ctx.addIssue({ code: "custom", path: ["verified"], message: "una foto verificada requiere source_url" });
+    const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
+    if (img.is_official && (!img.source || !img.source_url)) issue("is_official", "una foto oficial requiere source y source_url");
+    if (img.verified) {
+      if (!img.source_url) issue("verified", "una foto verificada requiere source_url");
+      if (!img.rights_basis) issue("rights_basis", "una foto verificada requiere base de derechos (licencia abierta, permiso escrito o propia)");
+    }
+    if ((img.rights_basis === "cc-by" || img.rights_basis === "cc-by-sa") && (!img.author || !img.license_url))
+      issue("rights_basis", "las licencias con atribución requieren author y license_url");
+    if (img.rights_basis === "written-permission" && !img.rights_reference)
+      issue("rights_reference", "el permiso escrito debe documentarse en rights_reference");
   });
 
 const categories = ["gaming", "business", "ultrabook", "workstation", "student", "creator", "2in1", "chromebook", "rugged", "budget", "mainstream"] as const;

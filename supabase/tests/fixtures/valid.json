@@ -120,12 +120,15 @@
       ],
       "images": [
         {
-          "url": "https://example.com/a.png",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/a/aa/TEST_laptop.jpg",
           "alt": "TEST frontal",
           "angle": "front",
-          "is_official": true,
           "source": "test-maker",
-          "source_url": "https://example.com/press",
+          "source_url": "https://commons.wikimedia.org/wiki/File:TEST_laptop.jpg",
+          "rights_basis": "cc-by-sa",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "author": "TEST Autor",
           "verified": true
         }
       ]

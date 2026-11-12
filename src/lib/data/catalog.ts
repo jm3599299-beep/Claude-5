@@ -7,7 +7,7 @@ const MODEL_CARD_SELECT = `
   id, slug, name, generation, release_year, category, commercial_status, is_featured, popularity,
   brand:brands(slug, name),
   family:families(slug, name),
-  images(url, storage_path, alt, is_official, is_placeholder, verified, credit, source_url, sort_order)
+  images(url, storage_path, alt, is_official, is_placeholder, verified, credit, source_url, rights_basis, license, license_url, author, sort_order)
 `;
 
 
@@ -92,7 +92,7 @@ const MODEL_DETAIL_SELECT = `
   brand:brands(slug, name),
   family:families(slug, name),
   status_source:sources!models_status_source_id_fkey(name, homepage_url),
-  images(id, variant_id, url, storage_path, alt, angle, is_official, is_placeholder, verified, credit, source_url, license, sort_order),
+  images(id, variant_id, url, storage_path, alt, angle, is_official, is_placeholder, verified, credit, source_url, license, license_url, author, rights_basis, sort_order),
   variants(
     id, variant_key, sku, name, region, is_default, has_dgpu,
     ram_gb, ram_type, ram_speed_mts, ram_slots, ram_soldered_gb, ram_max_gb,

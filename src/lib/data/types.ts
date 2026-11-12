@@ -21,6 +21,8 @@ export interface Family {
   description: string | null;
 }
 
+export type RightsBasis = "cc0" | "cc-by" | "cc-by-sa" | "written-permission" | "own";
+
 export interface ModelImage {
   url: string | null;
   storage_path: string | null;
@@ -30,6 +32,10 @@ export interface ModelImage {
   verified: boolean;
   credit: string | null;
   source_url: string | null;
+  rights_basis: RightsBasis | null;
+  license: string | null;
+  license_url: string | null;
+  author: string | null;
 }
 
 export interface ModelCard {
@@ -179,6 +185,6 @@ export interface ModelDetail extends Omit<ModelCard, "images"> {
   updated_at: string;
   brand: Pick<Brand, "slug" | "name"> | null;
   family: Pick<Family, "slug" | "name"> | null;
-  images: (ModelImage & { id: string; angle: string | null; license: string | null; sort_order: number; variant_id: string | null })[];
+  images: (ModelImage & { id: string; angle: string | null; sort_order: number; variant_id: string | null })[];
   variants: Variant[];
 }

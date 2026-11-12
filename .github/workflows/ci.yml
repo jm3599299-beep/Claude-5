@@ -12,6 +12,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run catalog:validate -- data/catalog
+      - run: npm run test:unit
       - run: npm run build
   database:
     runs-on: ubuntu-latest

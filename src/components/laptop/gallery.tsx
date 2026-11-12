@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from "lucide-react";
 
 export interface GalleryImage {
@@ -12,6 +13,9 @@ export interface GalleryImage {
   credit: string | null;
   sourceUrl: string | null;
   license: string | null;
+  licenseUrl: string | null;
+  author: string | null;
+  rightsBasis: "cc0" | "cc-by" | "cc-by-sa" | "written-permission" | "own";
 }
 
 const angleLabels: Record<string, string> = {
@@ -25,16 +29,38 @@ const angleLabels: Record<string, string> = {
   closed: "Cerrada",
 };
 
+const rightsLabel: Record<GalleryImage["rightsBasis"], string> = {
+  cc0: "Dominio público",
+  "cc-by": "Licencia abierta",
+  "cc-by-sa": "Licencia abierta",
+  "written-permission": "Uso autorizado por el titular",
+  own: "Foto de LaptopVerse",
+};
+
+/** Attribution as required by CC licenses: author, license (linked) and source. */
 function Provenance({ img }: { img: GalleryImage }) {
+  const link = "text-primary hover:underline";
   return (
     <p className="text-xs text-fg-muted">
-      {img.isOfficial ? "Foto oficial" : "Foto verificada"}
-      {img.credit && <> · © {img.credit}</>}
-      {img.license && <> · {img.license}</>}
+      {img.isOfficial ? "Foto oficial" : rightsLabel[img.rightsBasis]}
+      {img.author && <> · Foto: {img.author}</>}
+      {img.credit && !img.author && <> · © {img.credit}</>}
+      {img.license && (
+        <>
+          {" · "}
+          {img.licenseUrl ? (
+            <a href={img.licenseUrl} target="_blank" rel="noopener noreferrer license" className={link}>
+              {img.license}
+            </a>
+          ) : (
+            img.license
+          )}
+        </>
+      )}
       {img.sourceUrl && (
         <>
           {" · "}
-          <a href={img.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 text-primary hover:underline">
+          <a href={img.sourceUrl} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-0.5 ${link}`}>
             Fuente <ExternalLink className="h-3 w-3" />
           </a>
         </>
@@ -71,8 +97,9 @@ export function Gallery({ images, name }: { images: GalleryImage[]; name: string
         className="group relative block w-full overflow-hidden rounded-2xl border border-border bg-white"
         aria-label={`Ampliar imagen: ${current.alt}`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- official CDNs vary */}
-        <img src={current.src} alt={current.alt} className="aspect-[4/3] w-full object-contain p-6" />
+        <span className="relative block aspect-[4/3] w-full">
+          <Image src={current.src} alt={current.alt} fill priority sizes="(min-width: 1024px) 55vw, 100vw" className="object-contain p-6" />
+        </span>
         <span className="absolute right-3 top-3 rounded-lg bg-black/55 p-1.5 text-white opacity-0 transition group-hover:opacity-100">
           <ZoomIn className="h-4 w-4" />
         </span>
@@ -94,8 +121,9 @@ export function Gallery({ images, name }: { images: GalleryImage[]; name: string
                 aria-current={i === index}
                 className={`h-16 w-20 overflow-hidden rounded-lg border-2 bg-white ${i === index ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.src} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
+                <span className="relative block h-full w-full">
+                  <Image src={img.src} alt="" fill sizes="80px" className="object-contain p-1" />
+                </span>
               </button>
             </li>
           ))}
@@ -109,8 +137,9 @@ export function Gallery({ images, name }: { images: GalleryImage[]; name: string
         onClick={(e) => e.target === dialog.current && dialog.current?.close()}
       >
         <div className="relative bg-white">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={current.src} alt={current.alt} className="max-h-[80vh] w-full object-contain" />
+          <span className="relative block h-[80vh] w-full">
+            <Image src={current.src} alt={current.alt} fill sizes="95vw" quality={90} className="object-contain" />
+          </span>
           <button type="button" onClick={() => dialog.current?.close()} aria-label="Cerrar" className="absolute right-3 top-3 rounded-lg bg-black/60 p-2 text-white">
             <X className="h-5 w-5" />
           </button>

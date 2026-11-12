@@ -8,7 +8,7 @@ import type { ModelDetail, Variant } from "@/lib/data/types";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Badge, StatusBadge } from "@/components/ui/badge";
-import { LaptopImage, imageSrc } from "@/components/ui/laptop-image";
+import { LaptopImage, imageSrc, isDisplayable } from "@/components/ui/laptop-image";
 import { Gallery, type GalleryImage } from "@/components/laptop/gallery";
 import { SpecTable } from "@/components/laptop/spec-table";
 import { VariantTabs } from "@/components/laptop/variant-tabs";
@@ -33,13 +33,20 @@ const categoryLabels: Record<string, string> = {
 
 function galleryImages(model: ModelDetail, variantId: string | null): GalleryImage[] {
   return model.images
-    .filter((i) => i.verified && !i.is_placeholder && i.variant_id === variantId)
-    .flatMap((i) => {
-      const src = imageSrc(i);
-      return src
-        ? [{ id: i.id, src, alt: i.alt, angle: i.angle, isOfficial: i.is_official, credit: i.credit, sourceUrl: i.source_url, license: i.license }]
-        : [];
-    });
+    .filter((i) => i.variant_id === variantId && isDisplayable(i))
+    .map((i) => ({
+      id: i.id,
+      src: imageSrc(i)!,
+      alt: i.alt,
+      angle: i.angle,
+      isOfficial: i.is_official,
+      credit: i.credit,
+      sourceUrl: i.source_url,
+      license: i.license,
+      licenseUrl: i.license_url,
+      author: i.author,
+      rightsBasis: i.rights_basis!,
+    }));
 }
 
 function variantSublabel(v: Variant) {
@@ -229,7 +236,7 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
             <div className="overflow-hidden rounded-2xl border border-border">
               <LaptopImage image={null} name={model.name} />
               <p className="border-t border-border bg-surface px-4 py-2 text-xs text-fg-muted">
-                No hay fotografías verificadas del modelo exacto. No mostramos imágenes de modelos parecidos.
+                No hay fotografías verificadas y con licencia del modelo exacto. No mostramos imágenes de modelos parecidos ni fotos sin permiso de uso.
               </p>
             </div>
           )}

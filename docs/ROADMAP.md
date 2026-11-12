@@ -9,7 +9,10 @@
   workflow que importa al fusionar en `main`. Primer lote real: MacBook Air 13"/15" M5 (6 configuraciones,
   verificado en apple.com). Pendiente: adaptador Lenovo PSREF a nivel MTM, MacBook Pro, más marcas, y edición desde el panel (Fase 8).
   Ver `docs/DATA_SOURCES.md`.
-- [ ] **Fase 4** — Galerías de fotos oficiales con procedencia y lightbox.
+- [x] **Fase 4** — Imágenes: base de derechos obligatoria (BD + validador), hosts autorizados, `next/image` (AVIF/WebP,
+  tamaños adaptativos, carga diferida), atribución CC en galería, verificador técnico (`images:check`), asistente de
+  Wikimedia Commons (`images:commons`). Pendiente: primeras fotos reales con licencia (Apple no permite reutilizar las
+  suyas sin permiso; Commons limitado desde este entorno) y subida a Storage desde el panel (Fase 8).
 - [ ] **Fase 5** — Precios USD/DOP/MXN, API de tipos de cambio, comparador 2–4 con enlaces compartibles.
 - [ ] **Fase 6** — Auth, comunidad, reseñas, moderación.
 - [ ] **Fase 7** — Ingesta semanal de noticias (GitHub Actions cron + RSS), LaptopVerse Weekly, revisión editorial.

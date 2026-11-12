@@ -38,9 +38,12 @@
       ],
       "images": [
         {
-          "url": "https://example.com/x.png",
+          "url": "https://www.apple.com/x.png",
           "alt": "x",
-          "is_official": true
+          "is_official": true,
+          "verified": true,
+          "source_url": "https://www.apple.com/",
+          "rights_basis": "cc-by"
         }
       ]
     }

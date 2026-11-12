@@ -27,8 +27,13 @@ autocompletado en el editor) y se importa en **una única transacción**: o entr
 - `provenance`: indica qué fuente respalda qué campos. Un campo sin valor no puede tener fuente; un dato
   `verified` exige `url`; un campo no puede tener dos procedencias.
 - `has_dgpu: false` = sin GPU dedicada (no se muestra «Desconocido»). Si se indica `gpu`, se asume `true`.
-- Una imagen `is_official` exige `source` y `source_url`; una imagen `verified` exige `source_url`. Solo las imágenes
-  `verified` se muestran en el sitio. `variant_key` asocia la foto a una configuración concreta.
+- Imágenes: la `url` debe estar en un host autorizado (`src/lib/images/hosts.ts`: Wikimedia Commons o Supabase Storage).
+  Una imagen `verified` exige `source_url` y `rights_basis` (`cc0`, `cc-by`, `cc-by-sa`, `written-permission`, `own`).
+  `cc-by`/`cc-by-sa` exigen `author` y `license_url`; `written-permission` exige `rights_reference`. Solo las imágenes
+  verificadas y con derechos se muestran. `variant_key` asocia la foto a una configuración concreta.
+- `npm run images:commons -- "File:Nombre.jpg"` genera la entrada desde Commons; `npm run images:check -- data/catalog`
+  comprueba que cada URL responde, es JPEG/PNG/WebP/AVIF, pesa menos de 20 MB y mide al menos 600 px de ancho.
+  (En entornos con proxy: `NODE_USE_ENV_PROXY=1`.)
 - `published: false` por defecto: un editor decide cuándo un modelo es visible.
 - Coherencia: RAM soldada ≤ RAM total, ranuras libres ≤ totales, `release_date` coincide con `release_year`.
 
