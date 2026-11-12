@@ -145,6 +145,15 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            },
+            {
+              "source": "apple-newsroom-m5-air",
+              "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+              "fields": [
+                "cooling"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-12"
             }
           ],
           "prices": [
@@ -156,7 +165,8 @@
               "observed_at": "2026-03-03",
               "source": "apple-newsroom-m5-air"
             }
-          ]
+          ],
+          "cooling": "Sin ventilador (diseño pasivo, silencioso)"
         },
         {
           "key": "m5-gpu10-16gb-1tb",
@@ -232,8 +242,18 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            },
+            {
+              "source": "apple-newsroom-m5-air",
+              "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+              "fields": [
+                "cooling"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-12"
             }
-          ]
+          ],
+          "cooling": "Sin ventilador (diseño pasivo, silencioso)"
         },
         {
           "key": "m5-gpu10-24gb-1tb",
@@ -309,8 +329,18 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            },
+            {
+              "source": "apple-newsroom-m5-air",
+              "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+              "fields": [
+                "cooling"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-12"
             }
-          ]
+          ],
+          "cooling": "Sin ventilador (diseño pasivo, silencioso)"
         }
       ],
       "images": [],
@@ -411,6 +441,15 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            },
+            {
+              "source": "apple-newsroom-m5-air",
+              "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+              "fields": [
+                "cooling"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-12"
             }
           ],
           "prices": [
@@ -422,7 +461,8 @@
               "observed_at": "2026-03-03",
               "source": "apple-newsroom-m5-air"
             }
-          ]
+          ],
+          "cooling": "Sin ventilador (diseño pasivo, silencioso)"
         },
         {
           "key": "m5-gpu10-16gb-1tb",
@@ -498,8 +538,18 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            },
+            {
+              "source": "apple-newsroom-m5-air",
+              "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+              "fields": [
+                "cooling"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-12"
             }
-          ]
+          ],
+          "cooling": "Sin ventilador (diseño pasivo, silencioso)"
         },
         {
           "key": "m5-gpu10-24gb-1tb",
@@ -575,8 +625,18 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            },
+            {
+              "source": "apple-newsroom-m5-air",
+              "url": "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+              "fields": [
+                "cooling"
+              ],
+              "verified": true,
+              "verified_at": "2026-11-12"
             }
-          ]
+          ],
+          "cooling": "Sin ventilador (diseño pasivo, silencioso)"
         }
       ],
       "images": [],

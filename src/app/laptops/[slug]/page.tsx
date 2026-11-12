@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { CalendarDays, ExternalLink, Scale, ShieldCheck } from "lucide-react";
 import { getLatestRates, getModelDetail } from "@/lib/data/catalog";
 import { PriceSection } from "@/components/laptop/price-section";
+import { AudienceSection } from "@/components/laptop/audience-section";
 import { cachedNow } from "@/lib/now";
 import type { ModelDetail, Variant } from "@/lib/data/types";
 import { Container } from "@/components/ui/container";
@@ -289,6 +290,9 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
               <KeySpecs variant={defaultVariant} />
             </div>
           )}
+          <a href="#especificaciones" className="mr-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+            ¿Para quién es esta laptop? ↓
+          </a>
           {model.official_url && (
             <a href={model.official_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
               Página oficial del fabricante <ExternalLink className="h-4 w-4" />
@@ -298,9 +302,10 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
       </div>
 
       <section aria-labelledby="especificaciones" className="mt-14">
-        <h2 id="especificaciones" className="font-display text-2xl font-semibold">Especificaciones técnicas</h2>
+        <h2 id="especificaciones" className="font-display text-2xl font-semibold">Configuraciones y especificaciones</h2>
         <p className="mb-5 mt-1 text-sm text-fg-muted">
-          Cada variante tiene sus propias especificaciones; nunca se mezclan datos de configuraciones distintas.
+          Elige una configuración: «¿Para quién es esta laptop?», precios y especificaciones se calculan para cada una por
+          separado; nunca se mezclan datos de configuraciones distintas.
         </p>
         {variants.length ? (
           <VariantTabs
@@ -326,6 +331,7 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
                         <Gallery images={vImages} name={`${model.name} — ${v.name}`} />
                       </div>
                     )}
+                    <AudienceSection variant={v} headingId={`para-quien-${v.variant_key}`} />
                     <Link
                       href={`/comparar?v=${model.slug}:${v.variant_key}`}
                       className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:border-primary hover:text-primary"

@@ -14,6 +14,7 @@
 - **SKU:** Apple publica números de pieza por color/región sin asociarlos a cada configuración; no se asignaron
   (las variantes usan `key`).
 - **Estado comercial «A la venta»:** comprobado en la ficha vigente de apple.com el 2026-11-11.
+- Refrigeración «sin ventilador»: comunicado de Apple Newsroom («completely silent fanless design»).
 - Fecha de lanzamiento: comunicado de Apple Newsroom del 3 de marzo de 2026 (disponibilidad desde el 11 de marzo de 2026).
   Precios de partida en EE. UU. anotados en la fuente para la Fase 5: 13" 1.099 USD (999 USD educación), 15" 1.299 USD
   (1.199 USD educación).

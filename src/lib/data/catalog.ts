@@ -13,20 +13,21 @@ const MODEL_CARD_SELECT = `
 
 export async function getBrands(opts: { featuredOnly?: boolean } = {}) {
   "use cache";
-  cacheLife("hours");
   cacheTag("brands");
-  return run<Brand[]>([], (db) => {
+  const res = await run<Brand[]>([], (db) => {
     let q = db.from("brands").select("id, slug, name, country, website_url, logo_url, description, is_featured").order("name");
     if (opts.featuredOnly) q = q.eq("is_featured", true);
     return q;
   });
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 export async function getBrandWithFamilies(slug: string) {
   "use cache";
-  cacheLife("hours");
   cacheTag("brands", `brand:${slug}`);
-  return run<(Brand & { families: Family[] }) | null>(null, (db) =>
+  const res = await run<(Brand & { families: Family[] }) | null>(null, (db) =>
     db
       .from("brands")
       .select("id, slug, name, country, website_url, logo_url, description, is_featured, families(id, brand_id, slug, name, segment, description)")
@@ -34,21 +35,26 @@ export async function getBrandWithFamilies(slug: string) {
       .order("name", { referencedTable: "families" })
       .maybeSingle(),
   );
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 export type ModelListOrder = "featured" | "latest" | "popular";
 
 export async function getModelCards(order: ModelListOrder, limit = 8) {
   "use cache";
-  cacheLife("hours");
   cacheTag("models");
-  return run<ModelCard[]>([], (db) => {
+  const res = await run<ModelCard[]>([], (db) => {
     let q = db.from("models").select(MODEL_CARD_SELECT).eq("published", true).limit(limit);
     if (order === "featured") q = q.eq("is_featured", true).order("popularity", { ascending: false });
     if (order === "latest") q = q.not("release_date", "is", null).order("release_date", { ascending: false });
     if (order === "popular") q = q.order("popularity", { ascending: false });
     return q;
   });
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 export interface CatalogFilters {
@@ -62,9 +68,8 @@ export interface CatalogFilters {
 
 export async function searchModels(filters: CatalogFilters, limit = 48) {
   "use cache";
-  cacheLife("minutes");
   cacheTag("models");
-  return run<ModelCard[]>([], (db) => {
+  const res = await run<ModelCard[]>([], (db) => {
     const brandJoin = filters.brand ? "brand:brands!inner(slug, name)" : "brand:brands(slug, name)";
     let q = db
       .from("models")
@@ -80,6 +85,8 @@ export async function searchModels(filters: CatalogFilters, limit = 48) {
     if (filters.year) q = q.eq("release_year", filters.year);
     return q;
   });
+  cacheLife("minutes");
+  return res;
 }
 
 const CPU_COLS = "manufacturer, model, architecture, process_node, cores, performance_cores, efficiency_cores, threads, base_clock_ghz, boost_clock_ghz, tdp_w, npu_tops";
@@ -110,9 +117,8 @@ const MODEL_DETAIL_SELECT = `
 
 export async function getModelDetail(slug: string) {
   "use cache";
-  cacheLife("hours");
   cacheTag("models", `model:${slug}`);
-  return run<ModelDetail | null>(null, (db) =>
+  const res = await run<ModelDetail | null>(null, (db) =>
     db
       .from("models")
       .select(MODEL_DETAIL_SELECT)
@@ -123,13 +129,15 @@ export async function getModelDetail(slug: string) {
       .order("is_default", { referencedTable: "variants", ascending: false })
       .maybeSingle(),
   );
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 export async function getFamily(brandSlug: string, familySlug: string) {
   "use cache";
-  cacheLife("hours");
   cacheTag("brands", `brand:${brandSlug}`);
-  return run<(Family & { brand: Pick<Brand, "slug" | "name"> }) | null>(null, (db) =>
+  const res = await run<(Family & { brand: Pick<Brand, "slug" | "name"> }) | null>(null, (db) =>
     db
       .from("families")
       .select("id, brand_id, slug, name, segment, description, brand:brands!inner(slug, name)")
@@ -137,21 +145,25 @@ export async function getFamily(brandSlug: string, familySlug: string) {
       .eq("brand.slug", brandSlug)
       .maybeSingle(),
   );
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 export async function getModelsByFamily(familyId: string) {
   "use cache";
-  cacheLife("hours");
   cacheTag("models");
-  return run<ModelCard[]>([], (db) =>
+  const res = await run<ModelCard[]>([], (db) =>
     db.from("models").select(MODEL_CARD_SELECT).eq("published", true).eq("family_id", familyId).order("release_year", { ascending: false, nullsFirst: false }),
   );
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 /** Lightweight lists for sitemap / static params. */
 export async function getSitemapEntries() {
   "use cache";
-  cacheLife("hours");
   cacheTag("models", "brands");
   const [models, families] = await Promise.all([
     run<{ slug: string; updated_at: string }[]>([], (db) => db.from("models").select("slug, updated_at").eq("published", true).limit(50000)),
@@ -159,6 +171,8 @@ export async function getSitemapEntries() {
       db.from("families").select("slug, updated_at, brand:brands(slug)").eq("published", true).limit(50000),
     ),
   ]);
+  if (models.ok && families.ok) cacheLife("hours");
+  else cacheLife("minutes");
   return { models: models.data, families: families.data };
 }
 
@@ -173,18 +187,25 @@ export interface LatestRate {
 /** Latest stored USD-based exchange rates (synced daily by a scheduled job). */
 export async function getLatestRates() {
   "use cache";
-  cacheLife("hours");
   cacheTag("rates");
-  return run<LatestRate[]>([], (db) => db.from("latest_exchange_rates").select("base, quote, rate, provider, rate_date").eq("base", "USD"));
+  const res = await run<LatestRate[]>([], (db) => db.from("latest_exchange_rates").select("base, quote, rate, provider, rate_date").eq("base", "USD"));
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 /** Full detail for several models at once (comparator). */
 export async function getModelsForCompare(slugs: string[]) {
   "use cache";
-  cacheLife("hours");
   cacheTag("models", ...slugs.map((s) => `model:${s}`));
-  if (!slugs.length) return { ok: true as const, data: [] as ModelDetail[] };
-  return run<ModelDetail[]>([], (db) => db.from("models").select(MODEL_DETAIL_SELECT).in("slug", slugs).eq("published", true).eq("variants.published", true));
+  if (!slugs.length) {
+    cacheLife("hours");
+    return { ok: true as const, data: [] as ModelDetail[] };
+  }
+  const res = await run<ModelDetail[]>([], (db) => db.from("models").select(MODEL_DETAIL_SELECT).in("slug", slugs).eq("published", true).eq("variants.published", true));
+  if (res.ok) cacheLife("hours");
+  else cacheLife("minutes"); // errors are retried soon instead of being cached for long
+  return res;
 }
 
 export interface PickerModel {
@@ -197,11 +218,13 @@ export interface PickerModel {
 /** Lightweight model+variant list for the comparator picker (name substring match). */
 export async function searchForPicker(q: string) {
   "use cache";
-  cacheLife("minutes");
   cacheTag("models");
   const safe = q.replace(/[%_,()*\\]/g, " ").trim();
-  if (safe.length < 2) return { ok: true as const, data: [] as PickerModel[] };
-  return run<PickerModel[]>([], (db) =>
+  if (safe.length < 2) {
+    cacheLife("minutes");
+    return { ok: true as const, data: [] as PickerModel[] };
+  }
+  const res = await run<PickerModel[]>([], (db) =>
     db
       .from("models")
       .select("slug, name, brand:brands(name), variants(variant_key, name)")
@@ -211,4 +234,6 @@ export async function searchForPicker(q: string) {
       .order("name")
       .limit(10),
   );
+  cacheLife("minutes");
+  return res;
 }

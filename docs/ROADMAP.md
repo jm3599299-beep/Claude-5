@@ -20,6 +20,7 @@
   enlaces compartibles (`/comparar?v=modelo:variante,…`) y comparaciones guardadas (`/comparar/[slug]`).
   Precios reales cargados: lanzamiento en EE. UU. del MacBook Air M5 (13" y 15", configuración base).
   Pendiente: precios de tiendas en DO/MX (requiere fuentes autorizadas: APIs de afiliados o carga manual).
+- [x] **Extra** — «¿Para quién es esta laptop?» por configuración (ver `docs/AUDIENCE.md`).
 - [ ] **Fase 6** — Auth, comunidad, reseñas, moderación.
 - [ ] **Fase 7** — Ingesta semanal de noticias (GitHub Actions cron + RSS), LaptopVerse Weekly, revisión editorial.
 - [ ] **Fase 8** — Panel administrativo, SEO avanzado (JSON-LD, OG por página), endurecimiento de seguridad.
