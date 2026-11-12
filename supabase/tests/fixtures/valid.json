@@ -105,7 +105,27 @@
               "verified": true
             }
           ],
-          "key": "t1-a"
+          "key": "t1-a",
+          "prices": [
+            {
+              "kind": "launch",
+              "country": "US",
+              "currency": "USD",
+              "amount": 999,
+              "observed_at": "2026-01-15",
+              "source": "test-maker"
+            },
+            {
+              "kind": "store",
+              "country": "MX",
+              "currency": "MXN",
+              "amount": 20999,
+              "observed_at": "2026-11-01",
+              "source": "test-maker",
+              "store": "test-store-mx",
+              "in_stock": true
+            }
+          ]
         },
         {
           "name": "TEST B",
@@ -133,5 +153,12 @@
         }
       ]
     }
-  ]
+  ],
+  "stores": {
+    "test-store-mx": {
+      "name": "TEST Tienda MX",
+      "country": "MX",
+      "is_official": false
+    }
+  }
 }

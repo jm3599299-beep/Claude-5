@@ -15,6 +15,7 @@ export const site = {
 export const mainNav: { href: string; label: string }[] = [
   { href: "/laptops", label: "Catálogo" },
   { href: "/marcas", label: "Marcas" },
+  { href: "/comparar", label: "Comparar" },
 ];
 
 export const useCases = [

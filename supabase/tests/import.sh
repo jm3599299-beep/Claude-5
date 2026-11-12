@@ -19,7 +19,7 @@ F=supabase/tests/fixtures
 
 echo "1. invalid file is rejected with readable errors"
 out=$(npx tsx scripts/import-catalog.mts $F/invalid.json 2>&1) && fail "invalid accepted"
-for msg in "slug" "exige verified_at y source" "clave de variante duplicada" "has_dgpu=false" "RAM soldada" "no declarada" "foto oficial requiere" "host no autorizado" "atribución requieren"; do
+for msg in "slug" "exige verified_at y source" "clave de variante duplicada" "has_dgpu=false" "RAM soldada" "no declarada" "foto oficial requiere" "host no autorizado" "atribución requieren" "precio de tienda requiere store" "fecha futura"; do
   grep -q "$msg" <<<"$out" || fail "missing error: $msg"; done
 
 echo "2. dry run changes nothing"
@@ -37,12 +37,17 @@ npx tsx scripts/import-catalog.mts $F/valid.json >/dev/null
 [[ $(q "select commercial_status from models") == "current" ]] || fail "status"
 [[ $(q "select count(*) from audit_log where table_name='models'") -ge 1 ]] || fail "audit"
 
+[[ $(q "select count(*) from prices") == 2 ]] || fail "prices"
+[[ $(q "select count(*) from stores where country_code='MX'") == 1 ]] || fail "stores"
+
 echo "4. re-import is idempotent"
 npx tsx scripts/import-catalog.mts $F/valid.json >/dev/null
 [[ $(q "select count(*) from variants") == 2 ]] || fail "duplicated variants"
 [[ $(q "select count(*) from images") == 1 ]] || fail "duplicated images"
 [[ $(q "select count(*) from spec_sources") == 3 ]] || fail "duplicated provenance"
 [[ $(q "select count(*) from sources where name='TEST Fabricante'") == 1 ]] || fail "duplicated sources"
+[[ $(q "select count(*) from prices") == 2 ]] || fail "duplicated prices"
+[[ $(q "select count(*) from stores") == 1 ]] || fail "duplicated stores"
 
 echo "5. unknown component reference rolls back the whole file"
 npx tsx scripts/import-catalog.mts $F/bad-reference.json >/dev/null 2>&1 && fail "bad reference accepted"

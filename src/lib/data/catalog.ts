@@ -88,7 +88,7 @@ const GPU_COLS = "manufacturer, model, is_integrated, vram_gb, vram_type, tgp_mi
 const MODEL_DETAIL_SELECT = `
   id, slug, name, generation, release_year, release_date, category, use_cases, commercial_status,
   status_verified_at, is_featured, popularity, summary, pros, cons, performance_notes, thermals_notes,
-  upgradeability_notes, official_url, updated_at,
+  upgradeability_notes, build_quality_score, official_url, updated_at,
   brand:brands(slug, name),
   family:families(slug, name),
   status_source:sources!models_status_source_id_fkey(name, homepage_url),
@@ -103,7 +103,8 @@ const MODEL_DETAIL_SELECT = `
     cpu:cpus(${CPU_COLS}),
     gpu:gpus!variants_gpu_id_fkey(${GPU_COLS}),
     igpu:gpus!variants_igpu_id_fkey(${GPU_COLS}),
-    spec_sources(field, verified, source_url, verified_at, source:sources(name, is_official))
+    spec_sources(field, verified, source_url, verified_at, source:sources(name, is_official)),
+    prices(kind, country_code, currency_code, amount, observed_at, product_url, in_stock, store:stores(name), source:sources(name, homepage_url))
   )
 `;
 
@@ -159,4 +160,55 @@ export async function getSitemapEntries() {
     ),
   ]);
   return { models: models.data, families: families.data };
+}
+
+export interface LatestRate {
+  base: string;
+  quote: string;
+  rate: number;
+  provider: string;
+  rate_date: string;
+}
+
+/** Latest stored USD-based exchange rates (synced daily by a scheduled job). */
+export async function getLatestRates() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("rates");
+  return run<LatestRate[]>([], (db) => db.from("latest_exchange_rates").select("base, quote, rate, provider, rate_date").eq("base", "USD"));
+}
+
+/** Full detail for several models at once (comparator). */
+export async function getModelsForCompare(slugs: string[]) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("models", ...slugs.map((s) => `model:${s}`));
+  if (!slugs.length) return { ok: true as const, data: [] as ModelDetail[] };
+  return run<ModelDetail[]>([], (db) => db.from("models").select(MODEL_DETAIL_SELECT).in("slug", slugs).eq("published", true).eq("variants.published", true));
+}
+
+export interface PickerModel {
+  slug: string;
+  name: string;
+  brand: { name: string } | null;
+  variants: { variant_key: string; name: string }[];
+}
+
+/** Lightweight model+variant list for the comparator picker (name substring match). */
+export async function searchForPicker(q: string) {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("models");
+  const safe = q.replace(/[%_,()*\\]/g, " ").trim();
+  if (safe.length < 2) return { ok: true as const, data: [] as PickerModel[] };
+  return run<PickerModel[]>([], (db) =>
+    db
+      .from("models")
+      .select("slug, name, brand:brands(name), variants(variant_key, name)")
+      .eq("published", true)
+      .eq("variants.published", true)
+      .ilike("name", `%${safe}%`)
+      .order("name")
+      .limit(10),
+  );
 }

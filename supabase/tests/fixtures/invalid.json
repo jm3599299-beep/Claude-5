@@ -33,7 +33,17 @@
         {
           "sku": "D",
           "name": "b",
-          "key": "dup"
+          "key": "dup",
+          "prices": [
+            {
+              "kind": "store",
+              "country": "MX",
+              "currency": "MXN",
+              "amount": 100,
+              "observed_at": "2099-01-01",
+              "source": "missing"
+            }
+          ]
         }
       ],
       "images": [

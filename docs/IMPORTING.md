@@ -53,6 +53,24 @@ autocompletado en el editor) y se importa en **una única transacción**: o entr
 | `REVALIDATE_URL` | `https://<tu-dominio>/api/revalidate` |
 | `REVALIDATE_SECRET` | `openssl rand -hex 32`; el mismo valor en el servidor web y en GitHub. Secreto. |
 
+## Precios
+
+Cada variante admite `prices[]` con precios **reales observados**:
+
+```json
+"prices": [
+  { "kind": "launch", "country": "US", "currency": "USD", "amount": 1099, "observed_at": "2026-03-03", "source": "clave-fuente" },
+  { "kind": "store", "country": "MX", "currency": "MXN", "amount": 25999, "observed_at": "2026-11-10",
+    "source": "clave-fuente", "store": "clave-tienda", "url": "https://…", "in_stock": true }
+]
+```
+
+- `kind`: `launch` (precio de lanzamiento), `official` (precio actual del fabricante), `store` (precio en tienda).
+- Un precio `store` exige `store`, declarada en `"stores": { "clave": { "name", "country", "homepage_url" } }`, y su país
+  debe coincidir. No se admiten fechas futuras.
+- Los precios son un historial: reimportar no duplica la misma observación.
+- Nunca guardes conversiones: se calculan al mostrar.
+
 ## Lenovo PSREF (`npm run psref:convert`)
 
 Convierte las exportaciones **Excel por modelo (MTM)** de Lenovo PSREF al formato del catálogo.

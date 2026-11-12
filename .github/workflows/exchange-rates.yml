@@ -1,0 +1,27 @@
+name: Exchange rates
+on:
+  schedule:
+    - cron: "41 1 * * *" # diario; el proveedor actualiza una vez al día
+  workflow_dispatch:
+concurrency: exchange-rates
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      REVALIDATE_URL: ${{ secrets.REVALIDATE_URL }}
+      REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Sync rates
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
+        run: npm run fx:sync
+      - name: Revalidate cache
+        if: ${{ env.REVALIDATE_URL != '' }}
+        run: |
+          curl -fsS -X POST "$REVALIDATE_URL" -H "authorization: Bearer $REVALIDATE_SECRET" -H 'content-type: application/json' -d '{"tags":["rates"]}'

@@ -146,6 +146,16 @@
               "verified": true,
               "verified_at": "2026-11-11"
             }
+          ],
+          "prices": [
+            {
+              "kind": "launch",
+              "country": "US",
+              "currency": "USD",
+              "amount": 1099,
+              "observed_at": "2026-03-03",
+              "source": "apple-newsroom-m5-air"
+            }
           ]
         },
         {
@@ -401,6 +411,16 @@
               ],
               "verified": true,
               "verified_at": "2026-11-11"
+            }
+          ],
+          "prices": [
+            {
+              "kind": "launch",
+              "country": "US",
+              "currency": "USD",
+              "amount": 1299,
+              "observed_at": "2026-03-03",
+              "source": "apple-newsroom-m5-air"
             }
           ]
         },

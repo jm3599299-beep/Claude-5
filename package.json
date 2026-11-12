@@ -14,7 +14,8 @@
     "images:check": "tsx scripts/check-images.mts",
     "images:commons": "tsx scripts/commons-image.mts",
     "test:unit": "tsx --test \"src/**/*.test.ts\"",
-    "psref:convert": "tsx scripts/psref-import.mts"
+    "psref:convert": "tsx scripts/psref-import.mts",
+    "fx:sync": "tsx scripts/sync-exchange-rates.mts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -17,6 +17,8 @@ export interface ImportStats {
   variants: number;
   specSources: number;
   images: number;
+  stores: number;
+  prices: number;
 }
 
 export interface ImportResult {
@@ -52,12 +54,27 @@ const normRes = (r: string | null | undefined) => (r ? r.replace(/\s*[x×]\s*/i,
 class DryRunRollback extends Error {}
 
 export async function importCatalog(sql: Sql, file: CatalogFile, opts: { dryRun?: boolean } = {}): Promise<ImportResult> {
-  const stats: ImportStats = { sources: 0, brands: 0, families: 0, cpus: 0, gpus: 0, models: 0, variants: 0, specSources: 0, images: 0 };
+  const stats: ImportStats = { sources: 0, brands: 0, families: 0, cpus: 0, gpus: 0, models: 0, variants: 0, specSources: 0, images: 0, stores: 0, prices: 0 };
   const result: ImportResult = { stats, modelSlugs: [], brandSlugs: [], dryRun: !!opts.dryRun };
 
   try {
     await sql.begin(async (tx) => {
       const sourceIds = await upsertSources(tx, file, stats);
+
+      // Stores, identified by (name, country).
+      const storeIds = new Map<string, string>();
+      for (const [key, st] of Object.entries(file.stores)) {
+        const row = { name: st.name, country_code: st.country, homepage_url: st.homepage_url ?? null, is_official: st.is_official, source_id: st.source ? sourceIds.get(st.source)! : null };
+        const [existing] = await tx<{ id: string }[]>`select id from stores where name = ${st.name} and country_code = ${st.country} limit 1`;
+        if (existing) {
+          await tx`update stores set ${tx(row)} where id = ${existing.id}`;
+          storeIds.set(key, existing.id);
+        } else {
+          const [created] = await tx<{ id: string }[]>`insert into stores ${tx(row)} returning id`;
+          storeIds.set(key, created.id);
+        }
+        stats.stores++;
+      }
 
       // Brands & families (optional: most already exist from seed).
       for (const b of file.brands) {
@@ -156,6 +173,19 @@ export async function importCatalog(sql: Sql, file: CatalogFile, opts: { dryRun?
             returning id`;
           variantIdByKey.set(v.key, variant.id);
           stats.variants++;
+
+          // Prices are append-only history; the same observation is not duplicated.
+          for (const p of v.prices) {
+            const storeId = p.store ? storeIds.get(p.store)! : null;
+            const [dup] = await tx`select 1 from prices where variant_id = ${variant.id} and kind = ${p.kind} and country_code = ${p.country}
+              and currency_code = ${p.currency} and observed_at::date = ${p.observed_at} and store_id is not distinct from ${storeId} and amount = ${p.amount}`;
+            if (dup) continue;
+            await tx`insert into prices ${tx({
+              variant_id: variant.id, kind: p.kind, store_id: storeId, country_code: p.country, currency_code: p.currency,
+              amount: p.amount, product_url: p.url ?? null, in_stock: p.in_stock ?? null, observed_at: p.observed_at, source_id: sourceIds.get(p.source)!,
+            })}`;
+            stats.prices++;
+          }
 
           // Provenance is replaced as a whole for each imported variant.
           await tx`delete from spec_sources where variant_id = ${variant.id}`;

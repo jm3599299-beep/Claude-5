@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarDays, ExternalLink, ShieldCheck } from "lucide-react";
-import { getModelDetail } from "@/lib/data/catalog";
+import { CalendarDays, ExternalLink, Scale, ShieldCheck } from "lucide-react";
+import { getLatestRates, getModelDetail } from "@/lib/data/catalog";
+import { PriceSection } from "@/components/laptop/price-section";
+import { cachedNow } from "@/lib/now";
 import type { ModelDetail, Variant } from "@/lib/data/types";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -135,7 +137,7 @@ function VariantDiff({ variants }: { variants: Variant[] }) {
     <section aria-labelledby="diferencias" className="mt-12">
       <h2 id="diferencias" className="font-display text-2xl font-semibold">Diferencias entre variantes</h2>
       <p className="mt-1 text-sm text-fg-muted">Solo se muestran las especificaciones que cambian entre configuraciones.</p>
-      <div className="mt-4 overflow-x-auto rounded-2xl border border-border">
+      <div className="relative mt-4 overflow-x-auto rounded-2xl border border-border">
         <table className="w-full min-w-[600px] text-sm">
           <thead className="bg-surface-2/60 text-left">
             <tr>
@@ -173,7 +175,7 @@ function VariantDiff({ variants }: { variants: Variant[] }) {
 
 async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const res = await getModelDetail(slug);
+  const [res, rates, now] = await Promise.all([getModelDetail(slug), getLatestRates(), cachedNow()]);
   if (!res.ok) return <EmptyState title="Ficha no disponible" reason={res.reason} />;
   const model = res.data;
   if (!model) notFound();
@@ -324,6 +326,13 @@ async function ModelContent({ params }: { params: Promise<{ slug: string }> }) {
                         <Gallery images={vImages} name={`${model.name} — ${v.name}`} />
                       </div>
                     )}
+                    <Link
+                      href={`/comparar?v=${model.slug}:${v.variant_key}`}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:border-primary hover:text-primary"
+                    >
+                      <Scale className="h-4 w-4" aria-hidden="true" /> Comparar esta configuración
+                    </Link>
+                    <PriceSection prices={v.prices ?? []} rates={rates.data} now={now} />
                     <SpecTable variant={v} />
                   </div>
                 ),

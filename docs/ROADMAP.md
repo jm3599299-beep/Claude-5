@@ -14,7 +14,12 @@
   tamaños adaptativos, carga diferida), atribución CC en galería, verificador técnico (`images:check`), asistente de
   Wikimedia Commons (`images:commons`). Pendiente: primeras fotos reales con licencia (Apple no permite reutilizar las
   suyas sin permiso; Commons limitado desde este entorno) y subida a Storage desde el panel (Fase 8).
-- [ ] **Fase 5** — Precios USD/DOP/MXN, API de tipos de cambio, comparador 2–4 con enlaces compartibles.
+- [x] **Fase 5** — Precios reales por variante (lanzamiento/oficial/tienda, país, tienda, fecha, fuente) en el
+  importador; estadísticas de tienda (90 días, promedio con ≥3 muestras); tipos de cambio diarios (ExchangeRate-API,
+  `fx:sync` + workflow) y conversión orientativa etiquetada; comparador 2–4 con mejor valor resaltado, «destaca en»,
+  enlaces compartibles (`/comparar?v=modelo:variante,…`) y comparaciones guardadas (`/comparar/[slug]`).
+  Precios reales cargados: lanzamiento en EE. UU. del MacBook Air M5 (13" y 15", configuración base).
+  Pendiente: precios de tiendas en DO/MX (requiere fuentes autorizadas: APIs de afiliados o carga manual).
 - [ ] **Fase 6** — Auth, comunidad, reseñas, moderación.
 - [ ] **Fase 7** — Ingesta semanal de noticias (GitHub Actions cron + RSS), LaptopVerse Weekly, revisión editorial.
 - [ ] **Fase 8** — Panel administrativo, SEO avanzado (JSON-LD, OG por página), endurecimiento de seguridad.

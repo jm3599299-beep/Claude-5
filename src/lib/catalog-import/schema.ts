@@ -62,6 +62,31 @@ export const SPEC_FIELDS = [
 export type SpecField = (typeof SPEC_FIELDS)[number];
 
 const int = (min: number, max: number) => opt(z.number().int().min(min).max(max));
+const storeKey = z.string().regex(/^[a-z0-9][a-z0-9-_]*$/, "clave de tienda inválida");
+const country = z.string().regex(/^[A-Z]{2}$/, "país: código ISO de 2 letras (US, DO, MX…)");
+const currency = z.string().regex(/^[A-Z]{3}$/, "moneda: código ISO de 3 letras (USD, DOP, MXN…)");
+
+/**
+ * A REAL observed price, in its original currency. Conversions are never
+ * stored: they are computed on display and labelled as such.
+ */
+export const priceSchema = z
+  .object({
+    kind: z.enum(["launch", "official", "store"]),
+    country,
+    currency,
+    amount: z.number().positive().max(1_000_000),
+    observed_at: isoDate,
+    source: sourceKey,
+    store: opt(storeKey),
+    url: opt(httpUrl),
+    in_stock: opt(z.boolean()),
+  })
+  .superRefine((p, ctx) => {
+    if (p.kind === "store" && !p.store) ctx.addIssue({ code: "custom", path: ["store"], message: "un precio de tienda requiere store" });
+    if (p.observed_at > new Date().toISOString().slice(0, 10)) ctx.addIssue({ code: "custom", path: ["observed_at"], message: "fecha futura" });
+  });
+
 
 export const variantSchema = z
   .object({
@@ -110,6 +135,7 @@ export const variantSchema = z
     cooling: opt(text(200)),
     security_features: z.array(text(80)).max(20).default([]),
     published: z.boolean().default(true),
+    prices: z.array(priceSchema).max(500).default([]),
     /** Which source backs which fields. A field can only be listed if it has a value. */
     provenance: z
       .array(
@@ -250,6 +276,9 @@ export const catalogFileSchema = z
       )
       .default([]),
     families: z.array(z.object({ brand: slug, slug, name: text(60), segment: opt(text(60)), description: opt(text(1000)) })).default([]),
+    stores: z
+      .record(storeKey, z.object({ name: text(120), country, homepage_url: opt(httpUrl), is_official: z.boolean().default(false), source: opt(sourceKey) }))
+      .default({}),
     cpus: z.array(cpuSchema).default([]),
     gpus: z.array(gpuSchema).default([]),
     models: z.array(modelSchema).default([]),
@@ -262,13 +291,23 @@ export const catalogFileSchema = z
     };
     f.cpus.forEach((c, i) => check(c.source, ["cpus", i, "source"]));
     f.gpus.forEach((g, i) => check(g.source, ["gpus", i, "source"]));
+    Object.entries(f.stores).forEach(([k, st]) => check(st.source, ["stores", k, "source"]));
     const slugs = new Set<string>();
     f.models.forEach((m, mi) => {
       if (slugs.has(m.slug)) ctx.addIssue({ code: "custom", path: ["models", mi, "slug"], message: `slug duplicado: ${m.slug}` });
       slugs.add(m.slug);
       check(m.commercial_status.source, ["models", mi, "commercial_status", "source"]);
       m.images.forEach((img, ii) => check(img.source, ["models", mi, "images", ii, "source"]));
-      m.variants.forEach((v, vi) => v.provenance.forEach((p, pi) => check(p.source, ["models", mi, "variants", vi, "provenance", pi, "source"])));
+      m.variants.forEach((v, vi) => {
+        v.provenance.forEach((p, pi) => check(p.source, ["models", mi, "variants", vi, "provenance", pi, "source"]));
+        v.prices.forEach((p, pi) => {
+          check(p.source, ["models", mi, "variants", vi, "prices", pi, "source"]);
+          if (p.store && !(p.store in f.stores))
+            ctx.addIssue({ code: "custom", path: ["models", mi, "variants", vi, "prices", pi, "store"], message: `tienda «${p.store}» no declarada en "stores"` });
+          else if (p.store && f.stores[p.store].country !== p.country)
+            ctx.addIssue({ code: "custom", path: ["models", mi, "variants", vi, "prices", pi, "country"], message: `la tienda «${p.store}» es de ${f.stores[p.store].country}, no de ${p.country}` });
+        });
+      });
     });
   });
 

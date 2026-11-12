@@ -1,3 +1,4 @@
+import type { PriceObs } from "../pricing";
 export type CommercialStatus = "current" | "in_stores" | "legacy" | "discontinued" | "unverified";
 export type NewsLabel = "official" | "analysis" | "rumor" | "leak";
 
@@ -168,6 +169,7 @@ export interface Variant {
   cooling: string | null;
   security_features: string[];
   spec_sources: SpecSource[];
+  prices: PriceObs[];
 }
 
 export interface ModelDetail extends Omit<ModelCard, "images"> {
@@ -181,6 +183,7 @@ export interface ModelDetail extends Omit<ModelCard, "images"> {
   performance_notes: string | null;
   thermals_notes: string | null;
   upgradeability_notes: string | null;
+  build_quality_score: number | null;
   official_url: string | null;
   updated_at: string;
   brand: Pick<Brand, "slug" | "name"> | null;
