@@ -30,6 +30,6 @@ agujero negro, universo, espacio, ciencia, astronomía, curiosidades, tierra, ra
 ```
 
 ## Al subir
-- Hora recomendada: **18:00 (hora de Ciudad de México)**. Puedes subirlo antes y programarlo en YouTube Studio (Visibilidad → Programar).
+- Hora recomendada: **6:00 p. m. (hora de Ciudad de México)**. Puedes subirlo antes y programarlo en YouTube Studio (Visibilidad → Programar).
 - Contenido alterado o sintético: la narración es una voz generada con IA y las imágenes son reales o ilustraciones de la NASA. Como no presenta a nadie diciendo algo que no diría ni hechos falsos, normalmente no es obligatorio marcarlo; márcalo si quieres ser transparente.
 - Público: no es contenido para niños.

@@ -40,7 +40,7 @@ Trabaja siempre en la rama `canal-youtube`.
 
 ## Notas
 
-- **Hora de publicación:** a las **18:00, hora de Ciudad de México**. Según Buffer (1,8 M de Shorts analizados), la franja de 16:00 a 19:00 hora local es la mejor. La tarea diaria arranca a las 16:47 para que el vídeo esté listo antes. Cuando el canal tenga datos, ajústala con el informe «Cuándo están tus espectadores en YouTube» de YouTube Studio.
+- **Hora de publicación:** a las **6:00 p. m., hora de Ciudad de México**. Según Buffer (1,8 M de Shorts analizados), la franja de 4:00 a 7:00 p. m. hora local es la mejor. La tarea diaria arranca a las 4:47 p. m. para que el vídeo esté listo antes. Cuando el canal tenga datos, ajústala con el informe «Cuándo están tus espectadores en YouTube» de YouTube Studio.
 - **Montaje premium con Higgsfield** (manual, gasta créditos):
   - Voz: motor de ElevenLabs (`text2speech_v2`, variante `elevenlabs`) con la voz `Harrison` (id `573e5163-59b3-4926-aab1-951ef2985f81`). Es la más parecida a «James – Husky & Engaging», la voz destacada en la sección Narration de ElevenLabs. Cuesta unos 1,8 créditos por cada 580 caracteres.
   - Montaje: Higgsedit con `canal/motor/higgsedit_plan.py` (tiempos por palabra con faster-whisper, subtítulos palabra a palabra con la fuente Anton, fotos a pantalla completa con fundidos).

@@ -198,7 +198,7 @@ def main():
     open(os.path.join(ep, "PUBLICAR.md"), "w", encoding="utf-8").write(
         f"# Listo para subir\n\n**Archivo:** `short.mp4` ({duracion} s, 1080×1920)\n\n## Título\n```\n{spec['titulo']}\n```\n\n"
         f"## Descripción\n```\n{desc}\n```\n\n## Etiquetas\n```\n{', '.join(spec.get('etiquetas', []))}\n```\n\n"
-        "## Al subir\n- Contenido alterado o sintético: la narración es tu voz clonada con IA y las imágenes son reales o ilustraciones de la NASA. "
+        "## Al subir\n- Hora recomendada: **6:00 p. m. (hora de Ciudad de México)**. Puedes subirlo antes y programarlo en YouTube Studio (Visibilidad → Programar).\n- Contenido alterado o sintético: la narración es tu voz clonada con IA y las imágenes son reales o ilustraciones de la NASA. "
         "Como no presenta a nadie diciendo algo que no diría ni hechos falsos, normalmente no es obligatorio marcarlo; márcalo si quieres ser transparente.\n"
         "- Público: no es contenido para niños.\n")
     sh("rm", "-rf", tmp)
