@@ -40,6 +40,12 @@ Trabaja siempre en la rama `canal-youtube`.
 
 ## Notas
 
+- **Hora de publicación:** a las **18:00, hora de Ciudad de México**. Según Buffer (1,8 M de Shorts analizados), la franja de 16:00 a 19:00 hora local es la mejor. La tarea diaria arranca a las 16:47 para que el vídeo esté listo antes. Cuando el canal tenga datos, ajústala con el informe «Cuándo están tus espectadores en YouTube» de YouTube Studio.
+- **Montaje premium con Higgsfield** (manual, gasta créditos):
+  - Voz: motor de ElevenLabs (`text2speech_v2`, variante `elevenlabs`) con la voz `Harrison` (id `573e5163-59b3-4926-aab1-951ef2985f81`). Es la más parecida a «James – Husky & Engaging», la voz destacada en la sección Narration de ElevenLabs. Cuesta unos 1,8 créditos por cada 580 caracteres.
+  - Montaje: Higgsedit con `canal/motor/higgsedit_plan.py` (tiempos por palabra con faster-whisper, subtítulos palabra a palabra con la fuente Anton, fotos a pantalla completa con fundidos).
+  - La tarea diaria no tiene acceso a Higgsfield, así que sigue usando el motor local con Piper.
+
 - **Nombre del canal:** la marca que aparece en el vídeo es `@UniversoEnUnMinuto` (`CANAL` en `produce.py`). Cámbiala por el nombre real del canal.
 - **Voz:** si existe `canal/voz/referencia.wav` (una grabación de unos 8 a 15 s del dueño del canal hablando), la narración usa **su voz clonada** con Chatterbox Multilingual. Es de licencia MIT y corre en local: la grabación no se envía a ningún servicio. La primera vez se instala solo en `~/vozenv` y tarda unos minutos. Cada frase se transcribe con Whisper y se regenera si no se entiende bien.
   - Si no hay grabación, se usa la voz sintética Piper (`es_MX-claude-high`). También puedes forzarla con `--voz-sintetica`.

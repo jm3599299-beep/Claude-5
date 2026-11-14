@@ -1,6 +1,6 @@
 # Listo para subir
 
-**Archivo:** `short.mp4` (45.07 s, 1080×1920)
+**Archivo:** `short.mp4` (38,8 s, 1080×1920). Montado en Higgsedit (editor de Higgsfield); narración con el motor de ElevenLabs (voz Harrison) vía Higgsfield.
 
 ## Título
 ```
@@ -21,7 +21,7 @@ Imágenes:
 - Black Hole vs. Star: A Tidal Disruption Event (Artist's Concept) — NRAO/AUI/NSF/NASA (Dominio público (NASA)) https://images.nasa.gov/details/PIA22355
 - Pulses from the Sun — NASA/SDO/AIA (Dominio público (NASA)) https://images.nasa.gov/details/PIA17669
 - A Black Hole Destroys a Star (Illustration) — NASA/JPL-Caltech (Dominio público (NASA)) https://images.nasa.gov/details/PIA25440
-Narración: voz del creador generada con IA. Música original.
+Narración: voz generada con IA. Música original.
 ```
 
 ## Etiquetas
@@ -30,5 +30,6 @@ agujero negro, universo, espacio, ciencia, astronomía, curiosidades, tierra, ra
 ```
 
 ## Al subir
-- Contenido alterado o sintético: la narración es tu voz clonada con IA y las imágenes son reales o ilustraciones de la NASA. Como no presenta a nadie diciendo algo que no diría ni hechos falsos, normalmente no es obligatorio marcarlo; márcalo si quieres ser transparente.
+- Hora recomendada: **18:00 (hora de Ciudad de México)**. Puedes subirlo antes y programarlo en YouTube Studio (Visibilidad → Programar).
+- Contenido alterado o sintético: la narración es una voz generada con IA y las imágenes son reales o ilustraciones de la NASA. Como no presenta a nadie diciendo algo que no diría ni hechos falsos, normalmente no es obligatorio marcarlo; márcalo si quieres ser transparente.
 - Público: no es contenido para niños.
