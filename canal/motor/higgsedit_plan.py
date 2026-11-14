@@ -61,6 +61,12 @@ plan = {"dur": DUR, "gancho": g.get("gancho", "").upper(), "cta": g.get("cta", "
         "caps": caps}
 
 import os
+from PIL import Image, ImageOps
+os.makedirs(f"{ep}/.hx", exist_ok=True)
+for k, e in enumerate(plan["escenas"]):
+    out = f"{ep}/.hx/{k}.jpg"
+    ImageOps.fit(Image.open(f"{ep}/{e['img']}").convert("RGB"), (1080, 1920), Image.LANCZOS).save(out, quality=92)
+    e["img"] = f".hx/{k}.jpg"
 print("const EP = " + json.dumps(os.path.abspath(ep)) + "; const CANAL = \"@UniversoEnUnMinuto\";")
 print("const PLAN = " + json.dumps(plan, ensure_ascii=False) + ";")
 print(r'''
@@ -69,6 +75,7 @@ export default async ({ project }) => {
   const p = await project({ size: "1080x1920", fps: 30, background: "#05050f" });
   const imgs = {};
   for (const e of PLAN.escenas) if (!imgs[e.img]) imgs[e.img] = await p.add(EP + "/" + e.img);
+  const ANTON = (await p.add("/opt/fable/fonts-kit/anton-400.woff2")).id;
   const D = PLAN.dur, K = [];
   const fin = (a, d) => Math.max(0.05, Math.min(d, D - a - 0.001));
 
@@ -83,7 +90,7 @@ export default async ({ project }) => {
       { property: "offsetX", from: dx, to: -dx, duration: dur, easing: "linear" },
     ];
     if (k > 0) anim.push({ property: "opacity", from: 0, to: 1, duration: X, easing: "ease-in-out" });
-    K.push(<media file={imgs[e.img]} x={0} y={0} width={W} height={H} fit="cover" at={at} duration={dur} animate={anim} />);
+    p.compose(<media file={imgs[e.img]} x={0} y={0} width={W} height={H} fit="fill" animate={anim} />, { at, dur, name: "foto" + k });
   });
 
   // 2) degradados para legibilidad + viñeta
@@ -100,7 +107,7 @@ export default async ({ project }) => {
   // 4) gancho de la primera escena
   const g0 = PLAN.escenas[0].fin - 0.1;
   K.push(
-    <text x={60} y={240} width={960} height={520} at={0.1} duration={g0} fontFamily="Anton" fontSize={118} lineHeight={1.08} align="center"
+    <text x={60} y={240} width={960} height={520} at={0.1} duration={g0} typography={{ fontAssetId: ANTON }} fontSize={118} lineHeight={1.08} align="center"
       color="#ffffff" strokeColor="#000000" strokeWidth={14} shadow={{ x: 0, y: 8, blur: 24, color: "#000000" }}
       motion={{ by: "word", from: { opacity: 0, y: 40, scale: 0.6 }, duration: 0.35, overlap: 0.6, easing: "house" }}
       animate={[{ property: "opacity", keyframes: [{ at: 0, value: 1 }, { at: g0 - 0.35, value: 1 }, { at: g0 - 0.05, value: 0 }] }]}
@@ -112,7 +119,7 @@ export default async ({ project }) => {
     const dur = fin(e.ini + 0.2, e.fin - e.ini - 0.25);
     const size = e.dato.length > 8 ? 112 : 230;
     K.push(
-      <text x={40} y={size > 150 ? 250 : 330} width={1000} height={size * 1.3} at={e.ini + 0.2} duration={dur} fontFamily="Anton" fontSize={size} align="center"
+      <text x={40} y={size > 150 ? 250 : 330} width={1000} height={size * 1.3} at={e.ini + 0.2} duration={dur} typography={{ fontAssetId: ANTON }} fontSize={size} align="center"
         color={Y} strokeColor="#000000" strokeWidth={size > 150 ? 18 : 12} shadow={{ x: 0, y: 0, blur: 40, color: "#FFB000" }}
         animate={[
           { property: "scale", keyframes: [{ at: 0, value: 0.3 }, { at: 0.18, value: 1.12 }, { at: 0.3, value: 1 }, { at: dur - 0.01, value: 1.04 }] },
@@ -123,16 +130,15 @@ export default async ({ project }) => {
 
   // 6) subtítulos palabra a palabra
   PLAN.caps.forEach(c => K.push(
-    <text x={40} y={1250} width={1000} height={190} at={c.a} duration={fin(c.a, c.d)} fontFamily="Anton" fontSize={c.t.length > 11 ? 112 : 136} align="center"
+    <text x={40} y={1250} width={1000} height={190} at={c.a} duration={fin(c.a, c.d)} typography={{ fontAssetId: ANTON }} fontSize={c.t.length > 11 ? 112 : 136} align="center"
       color={c.hot ? Y : "#ffffff"} strokeColor="#000000" strokeWidth={16} shadow={{ x: 0, y: 10, blur: 20, color: "#000000" }}
       animate={[{ property: "scale", keyframes: [{ at: 0, value: 0.72 }, { at: 0.09, value: 1.08 }, { at: 0.16, value: 1 }] }]}
     >{c.t}</text>));
 
   // 7) barra de progreso
-  K.push(<rect x={0} y={0} width={W} height={12} at={0} duration={D} fill="#ffffff" opacity={0.18} />);
-  K.push(<rect x={0} y={0} width={W} height={12} at={0} duration={D} fill={Y}
-      mask={{ shape: "rectangle", x: 0, y: 0, width: 1, height: 12 }}
-      animate={[{ property: "maskWidth", from: 1, to: W, duration: D - 0.01, easing: "linear" }]} />);
+  K.push(<rect x={0} y={0} width={W} height={12} at={0} duration={D} fill="rgba(255,255,255,0.18)" />);
+  K.push(<frame x={0} y={0} width={1} height={12} at={0} duration={D} background={Y}
+      animate={[{ property: "width", from: 1, to: W, duration: D - 0.01, easing: "linear" }]} />);
 
   // 8) cierre con llamada a la acción y marca del canal
   const last = PLAN.escenas[PLAN.escenas.length - 1];
@@ -143,7 +149,7 @@ export default async ({ project }) => {
     >{PLAN.cta}</text>);
   K.push(
     <text x={0} y={1790} width={W} height={60} at={0} duration={D} fontFamily="Montserrat" fontWeight={700} fontSize={32} align="center"
-      color="#ffffff" opacity={0.8} strokeColor="#000000" strokeWidth={6}>{CANAL}</text>);
+      color="rgba(255,255,255,0.8)" strokeColor="#000000" strokeWidth={6}>{CANAL}</text>);
 
   // 9) fundidos de entrada y salida
   K.push(<rect x={0} y={0} width={W} height={H} fill="#000000" at={0} duration={0.25} animate={[{ property: "opacity", from: 1, to: 0, duration: 0.25 }]} />);
