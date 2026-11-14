@@ -69,96 +69,87 @@ export default async ({ project }) => {
   const p = await project({ size: "1080x1920", fps: 30, background: "#05050f" });
   const imgs = {};
   for (const e of PLAN.escenas) if (!imgs[e.img]) imgs[e.img] = await p.add(EP + "/" + e.img);
-  const D = PLAN.dur;
+  const D = PLAN.dur, K = [];
+  const fin = (a, d) => Math.max(0.05, Math.min(d, D - a - 0.001));
 
   // 1) fondos: foto a pantalla completa con zoom/paneo lento y fundido cruzado
   PLAN.escenas.forEach((e, k) => {
     const X = k === 0 ? 0 : 0.35;
-    const at = Math.max(0, e.ini - X / 2), dur = Math.min(D, e.fin + 0.2) - at;
+    const at = Math.max(0, e.ini - X / 2), dur = fin(at, Math.min(D, e.fin + 0.2) - at);
     const zin = e.mov !== "out";
+    const dx = e.mov === "left" ? 40 : e.mov === "right" ? -40 : 0;
     const anim = [
       { property: "scale", from: zin ? 1.0 : 1.16, to: zin ? 1.16 : 1.0, duration: dur, easing: "linear" },
-      { property: "offsetX", from: e.mov === "left" ? 40 : e.mov === "right" ? -40 : 0, to: e.mov === "left" ? -40 : e.mov === "right" ? 40 : 0, duration: dur, easing: "linear" },
+      { property: "offsetX", from: dx, to: -dx, duration: dur, easing: "linear" },
     ];
     if (k > 0) anim.push({ property: "opacity", from: 0, to: 1, duration: X, easing: "ease-in-out" });
-    p.compose(
-      <media file={imgs[e.img]} x={0} y={0} width={W} height={H} fit="cover" animate={anim} />,
-      { at, dur, name: "foto" + k }
-    );
+    K.push(<media file={imgs[e.img]} x={0} y={0} width={W} height={H} fit="cover" at={at} duration={dur} animate={anim} />);
   });
 
   // 2) degradados para legibilidad + viñeta
-  p.compose(
-    <rect x={0} y={0} width={W} height={H} fill={{ kind: "linear", angle: 180, stops: [
+  K.push(<rect x={0} y={0} width={W} height={H} at={0} duration={D} fill={{ kind: "linear", angle: 180, stops: [
       { offset: 0, color: "#000000", opacity: 0.6 }, { offset: 0.2, color: "#000000", opacity: 0 },
-      { offset: 0.55, color: "#000000", opacity: 0.05 }, { offset: 1, color: "#000000", opacity: 0.8 }] }} />,
-    { at: 0, dur: D, name: "degradado" });
-  p.compose(
-    <rect x={0} y={0} width={W} height={H} fill={{ kind: "radial", stops: [
-      { offset: 0.55, color: "#000000", opacity: 0 }, { offset: 1, color: "#000000", opacity: 0.55 }] }} />,
-    { at: 0, dur: D, name: "viñeta" });
+      { offset: 0.55, color: "#000000", opacity: 0.05 }, { offset: 1, color: "#000000", opacity: 0.8 }] }} />);
+  K.push(<rect x={0} y={0} width={W} height={H} at={0} duration={D} fill={{ kind: "radial", stops: [
+      { offset: 0.55, color: "#000000", opacity: 0 }, { offset: 1, color: "#000000", opacity: 0.55 }] }} />);
 
   // 3) destello en cada corte
-  PLAN.escenas.slice(1).forEach((e, k) => p.compose(
-    <rect x={0} y={0} width={W} height={H} fill="#ffffff" animate={[{ property: "opacity", from: 0.4, to: 0, duration: 0.22 }]} />,
-    { at: e.ini, dur: 0.22, name: "flash" + k }));
+  PLAN.escenas.slice(1).forEach(e => K.push(
+    <rect x={0} y={0} width={W} height={H} fill="#ffffff" at={e.ini} duration={0.22} animate={[{ property: "opacity", from: 0.4, to: 0, duration: 0.22 }]} />));
 
   // 4) gancho de la primera escena
-  p.compose(
-    <text x={60} y={240} width={960} height={520} fontFamily="Anton" fontSize={118} lineHeight={1.08} align="center"
+  const g0 = PLAN.escenas[0].fin - 0.1;
+  K.push(
+    <text x={60} y={240} width={960} height={520} at={0.1} duration={g0} fontFamily="Anton" fontSize={118} lineHeight={1.08} align="center"
       color="#ffffff" strokeColor="#000000" strokeWidth={14} shadow={{ x: 0, y: 8, blur: 24, color: "#000000" }}
       motion={{ by: "word", from: { opacity: 0, y: 40, scale: 0.6 }, duration: 0.35, overlap: 0.6, easing: "house" }}
-      animate={[{ property: "opacity", keyframes: [{ at: 0, value: 1 }, { at: PLAN.escenas[0].fin - 0.45, value: 1 }, { at: PLAN.escenas[0].fin - 0.15, value: 0 }] }]}
-    >{PLAN.gancho}</text>,
-    { at: 0.1, dur: PLAN.escenas[0].fin - 0.1, name: "gancho" });
+      animate={[{ property: "opacity", keyframes: [{ at: 0, value: 1 }, { at: g0 - 0.35, value: 1 }, { at: g0 - 0.05, value: 0 }] }]}
+    >{PLAN.gancho}</text>);
 
   // 5) dato grande de cada escena
   PLAN.escenas.forEach((e, k) => {
     if (!e.dato || k === 0) return;
-    const dur = e.fin - e.ini - 0.2;
+    const dur = fin(e.ini + 0.2, e.fin - e.ini - 0.25);
     const size = e.dato.length > 8 ? 112 : 230;
-    p.compose(
-      <text x={40} y={size > 150 ? 250 : 330} width={1000} height={size * 1.3} fontFamily="Anton" fontSize={size} align="center"
+    K.push(
+      <text x={40} y={size > 150 ? 250 : 330} width={1000} height={size * 1.3} at={e.ini + 0.2} duration={dur} fontFamily="Anton" fontSize={size} align="center"
         color={Y} strokeColor="#000000" strokeWidth={size > 150 ? 18 : 12} shadow={{ x: 0, y: 0, blur: 40, color: "#FFB000" }}
         animate={[
-          { property: "scale", keyframes: [{ at: 0, value: 0.3 }, { at: 0.18, value: 1.12 }, { at: 0.3, value: 1 }, { at: dur, value: 1.04 }] },
-          { property: "opacity", keyframes: [{ at: 0, value: 0 }, { at: 0.12, value: 1 }, { at: dur - 0.2, value: 1 }, { at: dur, value: 0 }] },
+          { property: "scale", keyframes: [{ at: 0, value: 0.3 }, { at: 0.18, value: 1.12 }, { at: 0.3, value: 1 }, { at: dur - 0.01, value: 1.04 }] },
+          { property: "opacity", keyframes: [{ at: 0, value: 0 }, { at: 0.12, value: 1 }, { at: dur - 0.2, value: 1 }, { at: dur - 0.01, value: 0 }] },
         ]}
-      >{e.dato}</text>,
-      { at: e.ini + 0.2, dur, name: "dato" + k });
+      >{e.dato}</text>);
   });
 
   // 6) subtítulos palabra a palabra
-  PLAN.caps.forEach((c, j) => p.compose(
-    <text x={40} y={1250} width={1000} height={190} fontFamily="Anton" fontSize={c.t.length > 11 ? 112 : 136} align="center"
+  PLAN.caps.forEach(c => K.push(
+    <text x={40} y={1250} width={1000} height={190} at={c.a} duration={fin(c.a, c.d)} fontFamily="Anton" fontSize={c.t.length > 11 ? 112 : 136} align="center"
       color={c.hot ? Y : "#ffffff"} strokeColor="#000000" strokeWidth={16} shadow={{ x: 0, y: 10, blur: 20, color: "#000000" }}
       animate={[{ property: "scale", keyframes: [{ at: 0, value: 0.72 }, { at: 0.09, value: 1.08 }, { at: 0.16, value: 1 }] }]}
-    >{c.t}</text>,
-    { at: c.a, dur: c.d, name: "sub" + j }));
+    >{c.t}</text>));
 
   // 7) barra de progreso
-  p.compose(<rect x={0} y={0} width={W} height={12} fill="#ffffff" opacity={0.18} />, { at: 0, dur: D, name: "barra-fondo" });
-  p.compose(
-    <frame x={0} y={0} width={1} height={12} background={Y}
-      animate={[{ property: "width", from: 1, to: W, duration: D - 0.01, easing: "linear" }]} />,
-    { at: 0, dur: D, name: "barra" });
+  K.push(<rect x={0} y={0} width={W} height={12} at={0} duration={D} fill="#ffffff" opacity={0.18} />);
+  K.push(<rect x={0} y={0} width={W} height={12} at={0} duration={D} fill={Y}
+      mask={{ shape: "rectangle", x: 0, y: 0, width: 1, height: 12 }}
+      animate={[{ property: "maskWidth", from: 1, to: W, duration: D - 0.01, easing: "linear" }]} />);
 
   // 8) cierre con llamada a la acción y marca del canal
   const last = PLAN.escenas[PLAN.escenas.length - 1];
-  p.compose(
-    <text x={80} y={1560} width={920} height={130} fontFamily="Montserrat" fontWeight={700} fontSize={50} align="center"
+  K.push(
+    <text x={80} y={1560} width={920} height={130} at={last.ini + 0.3} duration={fin(last.ini + 0.3, D)} fontFamily="Montserrat" fontWeight={700} fontSize={50} align="center"
       color="#bfe3ff" strokeColor="#000000" strokeWidth={8}
-      animate={[{ property: "opacity", from: 0, to: 1, duration: 0.4 }, { property: "scale", keyframes: [{ at: 0, value: 0.9 }, { at: 0.4, value: 1 }, { at: 1.2, value: 1.04 }, { at: 2, value: 1 }] }]}
-    >{PLAN.cta}</text>,
-    { at: last.ini + 0.3, dur: D - last.ini - 0.3, name: "cta" });
-  p.compose(
-    <text x={0} y={1790} width={W} height={60} fontFamily="Montserrat" fontWeight={700} fontSize={32} align="center"
-      color="#ffffff" opacity={0.8} strokeColor="#000000" strokeWidth={6}>{CANAL}</text>,
-    { at: 0, dur: D, name: "marca" });
+      animate={[{ property: "opacity", from: 0, to: 1, duration: 0.4 }]}
+    >{PLAN.cta}</text>);
+  K.push(
+    <text x={0} y={1790} width={W} height={60} at={0} duration={D} fontFamily="Montserrat" fontWeight={700} fontSize={32} align="center"
+      color="#ffffff" opacity={0.8} strokeColor="#000000" strokeWidth={6}>{CANAL}</text>);
 
   // 9) fundidos de entrada y salida
-  p.compose(<rect x={0} y={0} width={W} height={H} fill="#000000" animate={[{ property: "opacity", from: 1, to: 0, duration: 0.25 }]} />, { at: 0, dur: 0.25, name: "fade-in" });
-  p.compose(<rect x={0} y={0} width={W} height={H} fill="#000000" animate={[{ property: "opacity", from: 0, to: 1, duration: 0.5 }]} />, { at: D - 0.5, dur: 0.5, name: "fade-out" });
+  K.push(<rect x={0} y={0} width={W} height={H} fill="#000000" at={0} duration={0.25} animate={[{ property: "opacity", from: 1, to: 0, duration: 0.25 }]} />);
+  K.push(<rect x={0} y={0} width={W} height={H} fill="#000000" at={D - 0.5} duration={0.499} animate={[{ property: "opacity", from: 0, to: 1, duration: 0.499 }]} />);
+
+  p.compose(<frame width={W} height={H} layout="none" clip={true}>{K}</frame>, { at: 0, dur: D, name: "short" });
 
   if (process.env.SOLO_FOTOGRAMAS) {
     for (const t of process.env.SOLO_FOTOGRAMAS.split(",")) await p.frame(+t, `renders/f_${t}.png`);
