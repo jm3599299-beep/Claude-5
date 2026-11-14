@@ -1,0 +1,45 @@
+# Canal: misterios del universo en español (Shorts)
+
+**Nicho:** curiosidades y misterios del espacio en español: agujeros negros, el Sol, planetas raros, preguntas tipo «¿qué pasaría si…?».
+**Por qué este nicho:** tiene muchísima demanda en español (vídeos con cientos de miles o millones de vistas), no hace falta salir en cámara y la NASA ofrece imágenes reales de dominio público, así que cada vídeo puede llevar fotos de verdad sin problemas de derechos.
+
+Cada día se produce un short nuevo en `canal/episodios/AAAA-MM-DD-tema/`, con `short.mp4` y `PUBLICAR.md` (título, descripción y etiquetas) listos para subir a mano.
+
+## Procedimiento diario (lo sigue la tarea programada)
+
+Trabaja siempre en la rama `canal-youtube`.
+
+1. **Tendencias.** Ejecuta `python3 canal/motor/tendencias.py --periodo semana --out canal/tendencias/AAAA-MM-DD.md`.
+   - Si hay pocos resultados, repite con `--periodo mes`.
+   - Puedes añadir consultas propias como argumentos.
+   - Ignora los resultados que no son del nicho (bailes, películas…).
+2. **Elegir tema.** Busca qué *formato* y qué *tema* se repiten entre los que más vistas tienen (por ejemplo «qué pasaría si», agujeros negros, el Sol). Elige un ángulo **propio** que encaje en esa tendencia:
+   - No copies el título ni el guion de otro vídeo.
+   - No repitas un tema ya hecho: revisa la lista de episodios de abajo y las carpetas de `canal/episodios/`.
+3. **Guion** (`guion.json`; el formato está en la cabecera de `canal/motor/produce.py`):
+   - Entre 5 y 8 escenas, de 30 a 45 segundos en total.
+   - La primera frase es el gancho: una pregunta o una afirmación impactante.
+   - Cada escena aporta un dato nuevo y la última cierra con un remate.
+   - Comprueba **cada dato** con una búsqueda web y no inventes cifras.
+   - En `texto`, escribe los números con letra para que la voz los lea bien. En `subtitulo`, usa cifras y marca con `*asteriscos*` lo que se debe resaltar.
+   - `dato` es una cifra o palabra corta que aparece grande en pantalla.
+4. **Imágenes.** Para cada escena, ejecuta `python3 canal/motor/imagenes.py "consulta en inglés" canal/episodios/<ep>/img/<n> --n 6`.
+   - Usa `--fuente commons` para lo que no sea espacio.
+   - Mira `candidatos.jpg` y elige la mejor. Evita fotos con texto, gráficas, personas en laboratorios o mala calidad.
+5. **Previa.** Ejecuta `python3 canal/motor/produce.py canal/episodios/<ep> --previa` y revisa `previa.jpg`. Ajusta el encuadre (`foco`) o cambia las imágenes si hace falta.
+6. **Render.** Ejecuta `python3 canal/motor/produce.py canal/episodios/<ep>`. Genera `short.mp4`, `miniatura.jpg` y `PUBLICAR.md`.
+7. **Limpieza.** Borra de `img/<n>/` las candidatas que no se usan y deja solo la elegida, `creditos.json` y `candidatos.jpg`.
+8. **Registro.** Añade el episodio a la lista de abajo y haz commit y push a `canal-youtube`.
+
+## Episodios
+
+| Fecha | Tema | Carpeta |
+|---|---|---|
+| 2026-11-14 | La luz del Sol es vieja (8 min y 100 000 años) | `episodios/2026-11-14-luz-vieja` |
+| 2026-11-14 | Si la Tierra fuera un agujero negro mediría 9 mm | `episodios/2026-11-14-tierra-agujero-negro` |
+
+## Notas
+
+- **Nombre del canal:** la marca que aparece en el vídeo es `@UniversoEnUnMinuto` (`CANAL` en `produce.py`). Cámbiala por el nombre real del canal.
+- **Voz:** Piper, voz `es_MX-claude-high`, que se descarga sola. La música la sintetiza `produce.py`, así que no hay problemas de derechos.
+- **Subida:** se hace a mano (Windsor.ai solo lee estadísticas de YouTube y no puede publicar). Usa Windsor.ai para revisar qué episodios funcionan mejor y orientar los siguientes temas.

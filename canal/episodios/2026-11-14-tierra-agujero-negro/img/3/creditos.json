@@ -1,0 +1,44 @@
+[
+ {
+  "archivo": "1.jpg",
+  "titulo": "File:Blue Marble Western Hemisphere.jpg",
+  "autor": "NASA images by Reto Stöckli, based on data from NASA and NOAA. Instrument: Terra - MODIS",
+  "licencia": "Public domain",
+  "fuente": "https://commons.wikimedia.org/wiki/File:Blue_Marble_Western_Hemisphere.jpg"
+ },
+ {
+  "archivo": "2.jpg",
+  "titulo": "File:Blue Marble Eastern Hemisphere.jpg",
+  "autor": "NASA images by Reto Stöckli, based on data from NASA and NOAA",
+  "licencia": "Public domain",
+  "fuente": "https://commons.wikimedia.org/wiki/File:Blue_Marble_Eastern_Hemisphere.jpg"
+ },
+ {
+  "archivo": "3.jpg",
+  "titulo": "File:JM marbles 01.jpg",
+  "autor": "Joe Mabel",
+  "licencia": "CC BY-SA 3.0",
+  "fuente": "https://commons.wikimedia.org/wiki/File:JM_marbles_01.jpg"
+ },
+ {
+  "archivo": "4.jpg",
+  "titulo": "File:Glass Marble.jpg",
+  "autor": "Chong Tian Lin",
+  "licencia": "CC BY-SA 4.0",
+  "fuente": "https://commons.wikimedia.org/wiki/File:Glass_Marble.jpg"
+ },
+ {
+  "archivo": "5.jpg",
+  "titulo": "File:Civil War clay marbles with star.jpg",
+  "autor": "PumpkinSky",
+  "licencia": "CC BY-SA 3.0",
+  "fuente": "https://commons.wikimedia.org/wiki/File:Civil_War_clay_marbles_with_star.jpg"
+ },
+ {
+  "archivo": "6.jpg",
+  "titulo": "File:Civil War Minié ball and clay marbles 2.jpg",
+  "autor": "PumpkinSky",
+  "licencia": "CC BY-SA 3.0",
+  "fuente": "https://commons.wikimedia.org/wiki/File:Civil_War_Mini%C3%A9_ball_and_clay_marbles_2.jpg"
+ }
+]

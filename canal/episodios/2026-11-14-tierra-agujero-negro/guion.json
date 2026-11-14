@@ -1,0 +1,29 @@
+{
+  "titulo": "Si la Tierra fuera un agujero negro… mediría 9 mm 🕳️ #shorts",
+  "descripcion": "Si comprimieras toda la Tierra hasta convertirla en un agujero negro, cabría en tu mano: mediría unos 9 milímetros (su radio de Schwarzschild). Y el Sol, apenas 6 kilómetros.\n\n#universo #agujeronegro #ciencia #astronomia #espacio #curiosidades",
+  "etiquetas": ["agujero negro", "universo", "espacio", "ciencia", "astronomía", "curiosidades", "tierra", "radio de schwarzschild", "shorts"],
+  "gancho": "¿Y si la Tierra fuera un agujero negro?",
+  "cta": "Síguenos para más secretos del universo",
+  "velocidad_voz": 0.9,
+  "escenas": [
+    {"texto": "¿Y si la Tierra entera se convirtiera en un agujero negro?",
+     "imagen": "img/1/1.jpg", "mov": "in"},
+    {"texto": "Para lograrlo, tendrías que aplastar todo el planeta, con sus océanos y montañas, hasta un punto diminuto.",
+     "imagen": "img/2/5.jpg", "mov": "out"},
+    {"texto": "Y el resultado cabría en la palma de tu mano. Mediría apenas nueve milímetros. Como una canica.",
+     "subtitulo": "Y el resultado cabría en la palma de tu mano. Mediría apenas *9 milímetros.* Como una *canica.*",
+     "dato": "9 mm", "imagen": "img/3/4.jpg", "mov": "in"},
+    {"texto": "Pero seguiría pesando lo mismo. Por eso la Luna seguiría girando a su alrededor exactamente igual que hoy.",
+     "subtitulo": "Pero seguiría pesando *lo mismo.* Por eso la Luna seguiría girando a su alrededor *exactamente igual* que hoy.",
+     "imagen": "img/4/5.jpg", "mov": "out"},
+    {"texto": "Eso sí, si te acercaras a ella, la gravedad te estiraría como un espagueti mucho antes de tocarla.",
+     "subtitulo": "Eso sí, si te acercaras a ella, la gravedad te estiraría como un *espagueti* mucho antes de tocarla.",
+     "dato": "Espaguetización", "imagen": "img/5/1.jpg", "mov": "left"},
+    {"texto": "¿Y el Sol? Comprimido así, mediría solo unos seis kilómetros de ancho.",
+     "subtitulo": "¿Y el Sol? Comprimido así, mediría solo unos *6 kilómetros* de ancho.",
+     "dato": "6 km", "imagen": "img/6/2.jpg", "mov": "in"},
+    {"texto": "Todo lo que ves, podría caber en un puño.",
+     "subtitulo": "Todo lo que ves, podría *caber en un puño.*",
+     "imagen": "img/2/1.jpg", "mov": "out"}
+  ]
+}
