@@ -46,7 +46,7 @@ Trabaja siempre en la rama `canal-youtube`.
   - Montaje: Higgsedit con `canal/motor/higgsedit_plan.py` (tiempos por palabra con faster-whisper, subtítulos palabra a palabra con la fuente Anton, fotos a pantalla completa con fundidos).
   - La tarea diaria no tiene acceso a Higgsfield, así que sigue usando el motor local con Piper.
 
-- **Nombre del canal:** la marca que aparece en el vídeo es `@JoseMartines-hh4uw` (`CANAL` en `produce.py` y `higgsedit_plan.py`), el canal https://www.youtube.com/channel/UCk6wJ0Wz5JXbouZAW0pjnlg. Si cambias el identificador del canal, cámbialo ahí.
+- **Nombre del canal:** la marca que aparece en el vídeo es `@UniversoEnUnMinuto` (`CANAL` en `produce.py`). Cámbiala por el nombre real del canal.
 - **Voz:** si existe `canal/voz/referencia.wav` (una grabación de unos 8 a 15 s del dueño del canal hablando), la narración usa **su voz clonada** con Chatterbox Multilingual. Es de licencia MIT y corre en local: la grabación no se envía a ningún servicio. La primera vez se instala solo en `~/vozenv` y tarda unos minutos. Cada frase se transcribe con Whisper y se regenera si no se entiende bien.
   - Si no hay grabación, se usa la voz sintética Piper (`es_MX-claude-high`). También puedes forzarla con `--voz-sintetica`.
   - `canal/voz/` está en `.gitignore` porque el repo es **público** y la muestra permitiría clonar la voz. Si el repo pasa a ser privado, se puede quitar de `.gitignore` y subir la grabación para que la tarea diaria también narre con esa voz.

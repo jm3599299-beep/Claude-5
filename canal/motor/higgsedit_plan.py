@@ -67,7 +67,7 @@ for k, e in enumerate(plan["escenas"]):
     out = f"{ep}/.hx/{k}.jpg"
     ImageOps.fit(Image.open(f"{ep}/{e['img']}").convert("RGB"), (1080, 1920), Image.LANCZOS).save(out, quality=92)
     e["img"] = f".hx/{k}.jpg"
-print("const EP = " + json.dumps(os.path.abspath(ep)) + "; const CANAL = \"@JoseMartines-hh4uw\";")
+print("const EP = " + json.dumps(os.path.abspath(ep)) + "; const CANAL = \"@UniversoEnUnMinuto\";")
 print("const PLAN = " + json.dumps(plan, ensure_ascii=False) + ";")
 print(r'''
 const W = 1080, H = 1920, Y = "#FFD60A";
