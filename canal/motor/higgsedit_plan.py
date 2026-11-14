@@ -47,8 +47,8 @@ CLAVE = {"tierra", "agujero", "negro", "canica", "espagueti", "sol", "luna", "pu
          "kilometros", "diminuto", "exactamente", "gravedad", "mano"}
 caps = []
 for j, w in enumerate(W):
-    b = W[j + 1]["a"] if j + 1 < len(W) else w["b"] + 0.5
-    b = max(b, w["a"] + 0.18)
+    b = W[j + 1]["a"] - 0.01 if j + 1 < len(W) else w["b"] + 0.5
+    b = max(b, w["a"] + 0.06)  # sin solapes: cada palabra se va justo cuando entra la siguiente
     txt = w["w"].strip(" ,.;:¿?¡!").upper()
     if not txt:
         continue
@@ -132,7 +132,7 @@ export default async ({ project }) => {
   PLAN.caps.forEach(c => K.push(
     <text x={40} y={1250} width={1000} height={190} at={c.a} duration={fin(c.a, c.d)} typography={{ fontAssetId: ANTON }} fontSize={c.t.length > 11 ? 112 : 136} align="center"
       color={c.hot ? Y : "#ffffff"} strokeColor="#000000" strokeWidth={16} shadow={{ x: 0, y: 10, blur: 20, color: "#000000" }}
-      animate={[{ property: "scale", keyframes: [{ at: 0, value: 0.72 }, { at: 0.09, value: 1.08 }, { at: 0.16, value: 1 }] }]}
+      animate={[{ property: "scale", keyframes: c.d > 0.17 ? [{ at: 0, value: 0.72 }, { at: 0.09, value: 1.08 }, { at: 0.16, value: 1 }] : [{ at: 0, value: 0.9 }, { at: c.d - 0.01, value: 1 }] }]}
     >{c.t}</text>));
 
   // 7) barra de progreso
