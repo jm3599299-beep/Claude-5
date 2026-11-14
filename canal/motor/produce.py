@@ -9,7 +9,8 @@ Formato de guion.json:
   "titulo": "...", "descripcion": "...", "etiquetas": ["..."],
   "gancho": "Texto grande de la primera escena",
   "cta": "Síguenos para más",
-  "velocidad_voz": 0.92,            # <1 = más rápido
+  "velocidad_voz": 0.92,            # <1 = más rápido (voz sintética)
+  "tempo_clon": 1.05,               # >1 = más rápido (tu voz clonada)
   "escenas": [
     {"texto": "Lo que dice la voz (números en letra)",
      "subtitulo": "Lo que se lee (puede llevar cifras y *resaltado*) [opcional]",
@@ -17,6 +18,8 @@ Formato de guion.json:
      "imagen": "img/1.jpg", "mov": "in|out|left|right|up [opcional]", "foco": [0.5, 0.5]}
   ]
 }
+Voz: si existe canal/voz/referencia.wav (o la variable CANAL_VOZ_REF), se narra con esa voz
+clonada (Chatterbox, en local). Si no, con la voz sintética Piper. Fuerza Piper con --voz-sintetica.
 Salida: short.mp4, miniatura.jpg y PUBLICAR.md en la carpeta del episodio.
 """
 import json, os, subprocess, sys, wave, urllib.request
@@ -30,6 +33,8 @@ CANAL = "@UniversoEnUnMinuto"  # cámbialo por el nombre real del canal
 PAUSA = 0.28        # silencio entre frases
 INICIO = 0.35
 COLA = 1.6          # tiempo tras la última frase
+REFERENCIA = os.environ.get("CANAL_VOZ_REF") or os.path.join(AQUI, "..", "voz", "referencia.wav")
+VENV = os.path.join(os.path.expanduser("~"), "vozenv")
 
 
 def sh(*a):
@@ -47,6 +52,42 @@ def preparar_voz():
         if not os.path.exists(p):
             urllib.request.urlretrieve(VOZ_URL + f, p)
     return os.path.join(VOZ_DIR, VOZ + ".onnx")
+
+
+def preparar_clon():
+    py = os.path.join(VENV, "bin", "python")
+    if not os.path.exists(py):
+        print("Instalando el clonador de voz (solo la primera vez, unos minutos)...", flush=True)
+        sh(sys.executable, "-m", "venv", VENV)
+        sh(py, "-m", "pip", "install", "-q", "torch==2.6.0", "torchaudio==2.6.0", "--index-url", "https://download.pytorch.org/whl/cpu")
+        sh(py, "-m", "pip", "install", "-q", "chatterbox-tts", "faster-whisper")
+    return py
+
+
+def narrar(escenas, tmp, vel, tempo, sintetica=False):
+    """Genera v<i>.wav (mono 24 kHz, sin silencios en los extremos) para cada escena."""
+    salidas = [os.path.join(tmp, f"v{i}.wav") for i in range(len(escenas))]
+    crudos = [os.path.join(tmp, f"crudo{i}.wav") for i in range(len(escenas))]
+    if os.path.exists(REFERENCIA) and not sintetica:
+        print("Narrando con la voz clonada:", os.path.abspath(REFERENCIA), flush=True)
+        py = preparar_clon()
+        trab = os.path.join(tmp, "trabajos.json")
+        json.dump([{"texto": e["texto"].replace("*", ""), "salida": c} for e, c in zip(escenas, crudos)], open(trab, "w"), ensure_ascii=False)
+        ref = os.path.join(tmp, "ref.wav")
+        sh("ffmpeg", "-y", "-loglevel", "error", "-i", REFERENCIA, "-ac", "1", "-ar", "24000", "-af", "highpass=f=70,loudnorm=I=-18", ref)
+        sh(py, os.path.join(AQUI, "voz_clon.py"), ref, trab)
+        filtro = f"atempo={tempo},"
+    else:
+        print("Narrando con la voz sintética (Piper)", flush=True)
+        modelo = preparar_voz()
+        for e, c in zip(escenas, crudos):
+            tts(modelo, e["texto"].replace("*", ""), c, vel)
+        filtro = ""
+    recorte = "silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05"
+    for c, o in zip(crudos, salidas):
+        sh("ffmpeg", "-y", "-loglevel", "error", "-i", c, "-af",
+           f"{filtro}{recorte},areverse,{recorte},areverse", "-ac", "1", "-ar", "24000", "-c:a", "pcm_s16le", o)
+    return salidas
 
 
 def dur(p):
@@ -103,10 +144,10 @@ def main():
     ep = os.path.abspath(sys.argv[1]); previa = "--previa" in sys.argv
     spec = json.load(open(os.path.join(ep, "guion.json"), encoding="utf-8"))
     tmp = os.path.join(ep, ".tmp"); os.makedirs(tmp, exist_ok=True)
-    modelo = preparar_voz(); vel = spec.get("velocidad_voz", 0.92)
+    wavs = narrar(spec["escenas"], tmp, spec.get("velocidad_voz", 0.92), spec.get("tempo_clon", 1.05), "--voz-sintetica" in sys.argv)
     t = INICIO; voces = []
     for i, e in enumerate(spec["escenas"]):
-        p = os.path.join(tmp, f"v{i}.wav"); tts(modelo, e["texto"].replace("*", ""), p, vel)
+        p = wavs[i]
         d = dur(p); e["voz_ini"], e["voz_dur"] = round(t, 3), round(d, 3)
         e["ini"] = 0 if i == 0 else round(t - PAUSA / 2, 3)
         voces.append((p, t)); t += d + PAUSA
@@ -153,12 +194,13 @@ def main():
                 for c in json.load(open(cf)):
                     if c["archivo"] == os.path.basename(e["imagen"]) and c not in cred: cred.append(c)
     creditos = "\n".join(f"- {c['titulo']} — {c['autor']} ({c['licencia']}) {c['fuente']}" for c in cred)
-    desc = spec["descripcion"] + ("\n\nImágenes:\n" + creditos if creditos else "") + "\nVoz: síntesis de voz (Piper). Música original."
+    desc = spec["descripcion"] + ("\n\nImágenes:\n" + creditos if creditos else "") + ("\nNarración: voz del creador generada con IA." if os.path.exists(REFERENCIA) and "--voz-sintetica" not in sys.argv else "\nVoz: síntesis de voz (Piper).") + " Música original."
     open(os.path.join(ep, "PUBLICAR.md"), "w", encoding="utf-8").write(
         f"# Listo para subir\n\n**Archivo:** `short.mp4` ({duracion} s, 1080×1920)\n\n## Título\n```\n{spec['titulo']}\n```\n\n"
         f"## Descripción\n```\n{desc}\n```\n\n## Etiquetas\n```\n{', '.join(spec.get('etiquetas', []))}\n```\n\n"
-        "## Al subir\n- Contenido alterado o sintético: **No** hace falta marcarlo (no muestra personas ni hechos reales falsos), "
-        "pero la voz es sintética; márcalo si prefieres ser transparente.\n- Público: no es contenido para niños.\n")
+        "## Al subir\n- Contenido alterado o sintético: la narración es tu voz clonada con IA y las imágenes son reales o ilustraciones de la NASA. "
+        "Como no presenta a nadie diciendo algo que no diría ni hechos falsos, normalmente no es obligatorio marcarlo; márcalo si quieres ser transparente.\n"
+        "- Público: no es contenido para niños.\n")
     sh("rm", "-rf", tmp)
     print("OK ->", os.path.join(ep, "short.mp4"))
 

@@ -5,6 +5,7 @@
   "gancho": "¿Y si la Tierra fuera un agujero negro?",
   "cta": "Síguenos para más secretos del universo",
   "velocidad_voz": 0.9,
+  "tempo_clon": 1.05,
   "escenas": [
     {"texto": "¿Y si la Tierra entera se convirtiera en un agujero negro?",
      "imagen": "img/1/1.jpg", "mov": "in"},
