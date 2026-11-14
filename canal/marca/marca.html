@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(fuentes/Anton-Regular.ttf)}
+@font-face{font-family:Montserrat;src:url(fuentes/Montserrat.ttf);font-weight:100 900}
+body{margin:0;background:#000}
+</style></head>
+<body><canvas id="c"></canvas>
+<script>
+// Identidad del canal "Universo en un Minuto": render(modo) dibuja el banner (2560x1440) o el avatar (800x800).
+const Y='#FFD60A', NARANJA='#FF8A1E';
+const cv=document.getElementById('c'), g=cv.getContext('2d');
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+// Emblema: agujero negro con disco de acreción + esfera de reloj (60 marcas) y arco de "un minuto".
+function emblema(cx,cy,R,conFondo){
+  g.save();
+  if(conFondo){
+    const bg=g.createRadialGradient(cx,cy,R*.2,cx,cy,R*1.5);
+    bg.addColorStop(0,'#1a1040');bg.addColorStop(.6,'#0a0820');bg.addColorStop(1,'#03030c');
+    g.fillStyle=bg;g.fillRect(cx-R*1.6,cy-R*1.6,R*3.2,R*3.2);
+    const r=rng(3);
+    for(let i=0;i<260;i++){const a=r()*6.283,d=R*(.55+r()*1.1),s=r()*r()*R*.012+R*.002;
+      g.globalAlpha=.35+r()*.65;g.fillStyle=r()<.2?'#ffe7b0':'#ffffff';g.beginPath();g.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,s,0,6.283);g.fill();}
+    g.globalAlpha=1;
+  }
+  // halo
+  g.globalCompositeOperation='lighter';
+  let h=g.createRadialGradient(cx,cy,R*.3,cx,cy,R*1.05);
+  h.addColorStop(0,'rgba(255,170,40,.55)');h.addColorStop(.45,'rgba(255,120,20,.18)');h.addColorStop(1,'rgba(255,90,0,0)');
+  g.fillStyle=h;g.beginPath();g.arc(cx,cy,R*1.05,0,6.283);g.fill();
+  g.globalCompositeOperation='source-over';
+  // disco de acreción (parte trasera)
+  const disco=(front)=>{
+    g.save();g.translate(cx,cy);g.rotate(-.22);g.scale(1,.26);
+    g.beginPath();front?g.rect(-R,0,2*R,R):g.rect(-R,-R,2*R,R);g.clip();
+    const dg=g.createRadialGradient(0,0,R*.36,0,0,R*.82);
+    dg.addColorStop(0,'rgba(255,250,220,1)');dg.addColorStop(.18,'rgba(255,214,10,1)');
+    dg.addColorStop(.55,'rgba(255,138,30,.85)');dg.addColorStop(1,'rgba(255,80,0,0)');
+    g.fillStyle=dg;g.beginPath();g.arc(0,0,R*.82,0,6.283);g.arc(0,0,R*.36,0,6.283,true);g.fill('evenodd');
+    // vetas
+    g.globalCompositeOperation='lighter';
+    for(let k=0;k<7;k++){g.strokeStyle=`rgba(255,240,200,${.10+.04*(k%2)})`;g.lineWidth=R*.008;
+      g.beginPath();g.arc(0,0,R*(.42+k*.055),0,6.283);g.stroke();}
+    g.restore();
+  };
+  disco(false);
+  // anillo de fotones
+  g.save();g.shadowColor=Y;g.shadowBlur=R*.12;
+  g.strokeStyle=Y;g.lineWidth=R*.045;g.beginPath();g.arc(cx,cy,R*.36,0,6.283);g.stroke();g.restore();
+  // horizonte de sucesos
+  g.fillStyle='#000';g.beginPath();g.arc(cx,cy,R*.335,0,6.283);g.fill();
+  disco(true);
+  // esfera de reloj
+  for(let i=0;i<60;i++){
+    const a=i/60*6.283-Math.PI/2, big=i%5===0;
+    const r1=R*(big?.80:.84), r2=R*.9;
+    g.strokeStyle=big?'#ffffff':'rgba(255,255,255,.55)';g.lineWidth=R*(big?.022:.009);g.lineCap='round';
+    g.beginPath();g.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);g.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);g.stroke();
+  }
+  // arco de progreso (casi un minuto completo) con punta brillante
+  const fin=-Math.PI/2+6.283*.83;
+  g.save();g.shadowColor=Y;g.shadowBlur=R*.08;g.strokeStyle=Y;g.lineWidth=R*.05;g.lineCap='round';
+  g.beginPath();g.arc(cx,cy,R*.97,-Math.PI/2,fin);g.stroke();g.restore();
+  g.fillStyle='#fff';g.shadowColor='#fff';g.shadowBlur=R*.1;
+  g.beginPath();g.arc(cx+Math.cos(fin)*R*.97,cy+Math.sin(fin)*R*.97,R*.04,0,6.283);g.fill();
+  g.restore();
+}
+
+function texto(s,x,y,font,color,o={}){
+  g.save();g.font=font;g.textAlign=o.align||'left';g.textBaseline='alphabetic';
+  if(o.sombra){g.shadowColor='rgba(0,0,0,.85)';g.shadowBlur=o.sombra;g.shadowOffsetY=o.sombra/4;}
+  if(o.borde){g.lineJoin='round';g.lineWidth=o.borde;g.strokeStyle='rgba(0,0,0,.9)';g.strokeText(s,x,y);}
+  g.fillStyle=color;g.fillText(s,x,y);const w=g.measureText(s).width;g.restore();return w;
+}
+
+window.render=async function(modo,fondo){
+  await document.fonts.load('100px Anton');await document.fonts.load('700 40px Montserrat');await document.fonts.load('600 40px Montserrat');
+  if(modo==='avatar'){
+    cv.width=cv.height=800;emblema(400,400,380,true);return;
+  }
+  cv.width=2560;cv.height=1440;
+  const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=fondo;});
+  const sc=Math.max(2560/im.width,1440/im.height),iw=im.width*sc,ih=im.height*sc;
+  g.drawImage(im,(2560-iw)/2,(1440-ih)*.55,iw,ih);
+  // oscurecer la franja central (zona segura 1546x423, centrada) para que el texto destaque
+  let gr=g.createLinearGradient(0,0,0,1440);
+  gr.addColorStop(0,'rgba(3,3,12,.15)');gr.addColorStop(.33,'rgba(3,3,12,.72)');gr.addColorStop(.5,'rgba(3,3,12,.80)');gr.addColorStop(.67,'rgba(3,3,12,.72)');gr.addColorStop(1,'rgba(3,3,12,.15)');
+  g.fillStyle=gr;g.fillRect(0,0,2560,1440);
+  let vg=g.createRadialGradient(1280,720,500,1280,720,1500);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.6)');
+  g.fillStyle=vg;g.fillRect(0,0,2560,1440);
+  // bloque centrado: emblema + textos
+  const X0=507, Y0=508; // esquina de la zona segura
+  emblema(X0+205,Y0+211.5,195,false);
+  const tx=X0+450;
+  const disp=X0+1546-tx-10; // ancho disponible dentro de la zona segura
+  let fs=150;g.font=fs+'px Anton';const tw=g.measureText('UNIVERSO EN UN MINUTO').width;if(tw>disp)fs=Math.floor(fs*disp/tw);
+  let w=texto('UNIVERSO EN UN ',tx,Y0+175,fs+'px Anton','#ffffff',{sombra:24});
+  texto('MINUTO',tx+w,Y0+175,fs+'px Anton',Y,{sombra:24});
+  let ts=40;g.font='600 '+ts+'px Montserrat';const sw=g.measureText('Los misterios del espacio, en menos de 60 segundos').width;if(sw>disp)ts=Math.floor(ts*disp/sw);
+  texto('Los misterios del espacio, en menos de 60 segundos',tx+4,Y0+258,'600 '+ts+'px Montserrat','#dfe8ff',{sombra:14});
+  // píldora
+  const pill='NUEVO SHORT CADA DÍA · 18:00 CDMX';
+  g.font='800 32px Montserrat';const pw=g.measureText(pill).width+64;
+  g.save();g.shadowColor='rgba(255,214,10,.45)';g.shadowBlur=24;g.fillStyle=Y;
+  g.beginPath();g.roundRect(tx+4,Y0+300,pw,64,32);g.fill();g.restore();
+  texto(pill,tx+36,Y0+343,'800 32px Montserrat','#0a0820');
+  if(window.GUIAS){g.strokeStyle='#0f0';g.lineWidth=3;g.strokeRect(X0,Y0,1546,423);}
+};
+</script></body></html>
